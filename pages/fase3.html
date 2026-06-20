@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Fase 3 — Seguridad, Roles y RBAC · Portal GC ONGs</title>
+<link rel="stylesheet" href="../css/styles.css" />
+<link rel="stylesheet" href="../css/fase3.css" />
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+    <div class="header-inner">
+    <div class="brand">
+        <span class="brand-icon">🌐</span>
+        <div>
+        <span class="brand-title">Portal GC — ONGs Perú</span>
+        <span class="brand-sub">Gestión del Conocimiento · UTP Semana 11</span>
+        </div>
+    </div>
+    <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="fase1.html" class="nav-link">Fase 1 — Taxonomía</a>
+        <a href="fase2.html" class="nav-link">Fase 2 — Búsqueda</a>
+        <a href="fase3.html" class="nav-link active">Fase 3 — Roles</a>
+        <a href="marco-legal.html" class="nav-link">Marco Legal</a>
+    </nav>
+    </div>
+</header>
+
+<!-- PAGE HEADER -->
+<div class="page-header" style="background:linear-gradient(135deg,#4f46e5 0%,#1e1b4b 100%);">
+    <div class="container">
+    <div class="breadcrumb"><a href="../index.html">Inicio</a> → Fase 3</div>
+    <h1>🔐 FASE 3 — Seguridad, Roles y Control de Acceso</h1>
+    <p>Sistema RBAC (Control de Acceso Basado en Roles) con autenticación simulada, historial de versiones y auditoría de cambios.</p>
+    </div>
+</div>
+
+<!-- LOGIN / DASHBOARD SWITCHER -->
+<div id="appRoot">
+
+    <!-- ═══════════════ PANTALLA DE LOGIN ═══════════════ -->
+    <section id="loginScreen" class="login-screen">
+    <div class="login-card">
+        <div class="login-logo">🔐</div>
+        <h2 class="login-title">Acceso al Portal GC</h2>
+        <p class="login-sub">Selecciona un rol para explorar las funciones disponibles</p>
+
+        <div id="loginError" class="login-error hidden">
+        ⚠️ Usuario o contraseña incorrectos
+        </div>
+
+        <div class="form-group">
+        <label class="form-label">Usuario</label>
+        <input type="text" id="loginUser" class="form-input" placeholder="Ej: admin@ong.pe" />
+        </div>
+        <div class="form-group">
+        <label class="form-label">Contraseña</label>
+        <div class="input-pw-wrap">
+            <input type="password" id="loginPass" class="form-input" placeholder="••••••••"
+            onkeydown="if(event.key==='Enter') doLogin()" />
+            <button class="btn-eye" onclick="togglePw()" title="Mostrar/ocultar">👁</button>
+        </div>
+        </div>
+        <button class="btn-login" onclick="doLogin()">Iniciar sesión →</button>
+
+        <!-- Credenciales demo -->
+        <div class="demo-creds">
+        <p class="demo-title">👤 Credenciales de demostración</p>
+        <div class="cred-list">
+            <div class="cred-item cred-admin" onclick="fillCred('admin@ong.pe','admin123')">
+            <strong>👑 Administrador</strong>
+            <span>admin@ong.pe · admin123</span>
+            </div>
+            <div class="cred-item cred-editor" onclick="fillCred('editor@ong.pe','editor123')">
+            <strong>✏️ Editor</strong>
+            <span>editor@ong.pe · editor123</span>
+            </div>
+            <div class="cred-item cred-lector" onclick="fillCred('lector@ong.pe','lector123')">
+            <strong>👁 Lector</strong>
+            <span>lector@ong.pe · lector123</span>
+            </div>
+        </div>
+        </div>
+    </div>
+    </section>
+
+    <!-- ═══════════════ DASHBOARD RBAC ═══════════════ -->
+    <section id="dashboardScreen" class="hidden">
+
+    <!-- TOPBAR DE SESIÓN -->
+    <div class="session-bar">
+        <div class="container session-inner">
+        <div class="session-info">
+            <span id="sessionAvatar" class="session-avatar"></span>
+            <div>
+            <strong id="sessionName"></strong>
+            <span id="sessionRole" class="session-role-badge"></span>
+            </div>
+        </div>
+        <div class="session-actions">
+            <span id="sessionTime" class="session-time"></span>
+            <button class="btn-logout" onclick="doLogout()">Cerrar sesión</button>
+        </div>
+        </div>
+    </div>
+
+    <div class="container dashboard-layout">
+
+        <!-- SIDEBAR DE NAVEGACIÓN -->
+        <aside class="dash-sidebar">
+        <nav class="dash-nav">
+            <button class="dash-nav-item active" onclick="showTab('tab-overview', this)">
+            📊 Resumen
+            </button>
+            <button class="dash-nav-item" onclick="showTab('tab-articulos', this)">
+            📄 Artículos
+            </button>
+            <button class="dash-nav-item" id="navEditor" onclick="showTab('tab-editor', this)">
+            ✏️ Editor
+            </button>
+            <button class="dash-nav-item" id="navVersiones" onclick="showTab('tab-versiones', this)">
+            🕐 Historial
+            </button>
+            <button class="dash-nav-item" id="navUsuarios" onclick="showTab('tab-usuarios', this)">
+            👥 Usuarios
+            </button>
+            <button class="dash-nav-item" id="navAuditoria" onclick="showTab('tab-auditoria', this)">
+            🔍 Auditoría
+            </button>
+        </nav>
+        <!-- Permisos del rol -->
+        <div class="role-perms-box">
+            <p class="role-perms-title">Tus permisos</p>
+            <ul id="rolePermsList" class="role-perms-list"></ul>
+        </div>
+        </aside>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <main class="dash-main">
+
+        <!-- TAB: RESUMEN -->
+        <div id="tab-overview" class="tab-content">
+            <h2 class="tab-title">📊 Resumen del Sistema</h2>
+            <div class="kpi-grid">
+            <div class="kpi-card">
+                <span class="kpi-icon">📄</span>
+                <span class="kpi-num">33</span>
+                <span class="kpi-label">Artículos publicados</span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-icon">👥</span>
+                <span class="kpi-num">3</span>
+                <span class="kpi-label">Roles activos</span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-icon">🔄</span>
+                <span class="kpi-num">12</span>
+                <span class="kpi-label">Versiones guardadas</span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-icon">⚡</span>
+                <span class="kpi-num">5</span>
+                <span class="kpi-label">Cambios esta semana</span>
+            </div>
+            </div>
+
+            <!-- Tabla de roles RBAC -->
+            <h3 class="section-sub" style="margin:28px 0 12px;">Matriz de Permisos RBAC</h3>
+            <div class="table-wrapper">
+            <table class="data-table rbac-table">
+                <thead>
+                <tr>
+                    <th>Acción</th>
+                    <th>👑 Administrador</th>
+                    <th>✏️ Editor</th>
+                    <th>👁 Lector</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr><td>Ver artículos públicos</td><td class="p-yes">✅</td><td class="p-yes">✅</td><td class="p-yes">✅</td></tr>
+                <tr><td>Buscar en el portal</td><td class="p-yes">✅</td><td class="p-yes">✅</td><td class="p-yes">✅</td></tr>
+                <tr><td>Crear artículos</td><td class="p-yes">✅</td><td class="p-yes">✅</td><td class="p-no">❌</td></tr>
+                <tr><td>Editar artículos propios</td><td class="p-yes">✅</td><td class="p-yes">✅</td><td class="p-no">❌</td></tr>
+                <tr><td>Editar artículos de otros</td><td class="p-yes">✅</td><td class="p-no">❌</td><td class="p-no">❌</td></tr>
+                <tr><td>Eliminar artículos</td><td class="p-yes">✅</td><td class="p-no">❌</td><td class="p-no">❌</td></tr>
+                <tr><td>Ver historial de versiones</td><td class="p-yes">✅</td><td class="p-yes">✅</td><td class="p-no">❌</td></tr>
+                <tr><td>Restaurar versión anterior</td><td class="p-yes">✅</td><td class="p-no">❌</td><td class="p-no">❌</td></tr>
+                <tr><td>Gestionar usuarios</td><td class="p-yes">✅</td><td class="p-no">❌</td><td class="p-no">❌</td></tr>
+                <tr><td>Ver panel de auditoría</td><td class="p-yes">✅</td><td class="p-no">❌</td><td class="p-no">❌</td></tr>
+                <tr><td>Cambiar roles de usuarios</td><td class="p-yes">✅</td><td class="p-no">❌</td><td class="p-no">❌</td></tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+
+        <!-- TAB: ARTÍCULOS -->
+        <div id="tab-articulos" class="tab-content hidden">
+            <div class="tab-header-row">
+            <h2 class="tab-title">📄 Artículos del Portal</h2>
+            <button id="btnNuevoArt" class="btn btn-primary" onclick="showTab('tab-editor', document.querySelector('[onclick*=tab-editor]'))">
+                + Nuevo artículo
+            </button>
+            </div>
+            <div class="table-wrapper">
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Categoría</th>
+                    <th>Autor</th>
+                    <th>Última edición</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody id="articulosTableBody"></tbody>
+            </table>
+            </div>
+        </div>
+
+        <!-- TAB: EDITOR -->
+        <div id="tab-editor" class="tab-content hidden">
+            <h2 class="tab-title">✏️ Editor de Artículo</h2>
+            <div id="editorLocked" class="locked-panel hidden">
+            🔒 No tienes permisos para crear o editar artículos. Solo los roles <strong>Editor</strong> y <strong>Administrador</strong> pueden usar esta función.
+            </div>
+            <div id="editorForm">
+            <div class="editor-grid">
+                <div class="form-group">
+                  <label class="form-label">Título del artículo *</label>
+                <input type="text" id="artTitulo" class="form-input" placeholder="Ej: Guía de inscripción APCI 2026" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Categoría *</label>
+                <select id="artCategoria" class="form-input">
+                    <option value="">Seleccionar categoría...</option>
+                    <option>Marco Legal y Normativo</option>
+                    <option>Constitución y Gobierno</option>
+                    <option>Gestión de Proyectos y Fondos</option>
+                    <option>Recursos Humanos y Voluntariado</option>
+                    <option>Programas y Proyectos en Campo</option>
+                    <option>Conocimiento Institucional</option>
+                </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Etiquetas</label>
+                <input type="text" id="artTags" class="form-input" placeholder="#ley #vigente #APCI" />
+            </div>
+            <!-- Editor tipo Markdown/WYSIWYG simulado -->
+            <div class="form-group">
+                <label class="form-label">Contenido</label>
+                <div class="editor-toolbar">
+                <button class="toolbar-btn" onclick="insertMd('**','**')" title="Negrita"><b>B</b></button>
+                <button class="toolbar-btn" onclick="insertMd('*','*')" title="Cursiva"><i>I</i></button>
+                <button class="toolbar-btn" onclick="insertMd('## ','')" title="Título">H2</button>
+                <button class="toolbar-btn" onclick="insertMd('- ','')" title="Lista">≡</button>
+                <button class="toolbar-btn" onclick="insertMd('[texto](url)','')" title="Enlace">🔗</button>
+                <span class="toolbar-sep"></span>
+                <button class="toolbar-btn" onclick="togglePreview()">👁 Vista previa</button>
+                </div>
+                <textarea id="artContenido" class="editor-textarea"
+                placeholder="Escribe el contenido en Markdown...&#10;&#10;## Descripción&#10;Texto del artículo...&#10;&#10;## Requisitos&#10;- Requisito 1&#10;- Requisito 2"></textarea>
+                <div id="previewPanel" class="preview-panel hidden">
+                <div class="preview-label">Vista previa</div>
+                <div id="previewContent" class="preview-content"></div>
+                </div>
+            </div>
+            <div class="editor-actions">
+                <button id="btnGuardarBorrador" class="btn btn-outline" onclick="guardarArticulo('borrador')">Guardar borrador</button>
+                <button id="btnPublicar" class="btn btn-primary" onclick="guardarArticulo('publicado')">✅ Publicar artículo</button>
+            </div>
+            <div id="editorFeedback" class="editor-feedback hidden"></div>
+            </div>
+        </div>
+
+        <!-- TAB: HISTORIAL DE VERSIONES -->
+        <div id="tab-versiones" class="tab-content hidden">
+            <h2 class="tab-title">🕐 Historial de Versiones</h2>
+            <div id="versionesLocked" class="locked-panel hidden">
+            🔒 Solo los roles <strong>Editor</strong> y <strong>Administrador</strong> pueden ver el historial de versiones.
+            </div>
+            <div id="versionesContent">
+            <p class="section-sub" style="margin-bottom:16px;">Registro completo de cambios — Diff view para comparar versiones</p>
+            <div class="versions-list" id="versionsList"></div>
+            </div>
+        </div>
+
+        <!-- TAB: USUARIOS -->
+        <div id="tab-usuarios" class="tab-content hidden">
+            <h2 class="tab-title">👥 Gestión de Usuarios</h2>
+            <div id="usuariosLocked" class="locked-panel hidden">
+            🔒 Solo el <strong>Administrador</strong> puede gestionar usuarios y cambiar roles.
+            </div>
+            <div id="usuariosContent">
+            <div class="table-wrapper">
+                <table class="data-table">
+                <thead>
+                    <tr><th>Usuario</th><th>Email</th><th>Rol actual</th><th>Último acceso</th><th>Acción</th></tr>
+                </thead>
+                <tbody id="usuariosTableBody"></tbody>
+                </table>
+            </div>
+            </div>
+        </div>
+
+        <!-- TAB: AUDITORÍA -->
+        <div id="tab-auditoria" class="tab-content hidden">
+            <h2 class="tab-title">🔍 Registro de Auditoría</h2>
+            <div id="auditoriaLocked" class="locked-panel hidden">
+            🔒 Solo el <strong>Administrador</strong> puede ver el registro de auditoría completo.
+            </div>
+            <div id="auditoriaContent">
+            <p class="section-sub" style="margin-bottom:16px;">Registro inmutable de todas las acciones del sistema</p>
+            <div id="auditoriaLog" class="auditoria-log"></div>
+            </div>
+        </div>
+
+        </main>
+    </div>
+    </section>
+</div>
+
+<!-- EXPLICACIÓN TÉCNICA -->
+<section class="content-section" style="margin-top:48px;">
+    <div class="container">
+    <h2 class="section-title">⚙️ Arquitectura de Seguridad — RBAC</h2>
+    <div class="arch-layers">
+        <div class="arch-layer" style="border-left:4px solid #4f46e5;">
+        <div class="arch-layer-label">Capa 1 — Autenticación</div>
+        <div class="arch-layer-content">
+            <h4>Token de sesión + Hash de contraseña</h4>
+            <p>En producción: bcrypt para hashing de contraseñas, JWT firmado para tokens de sesión con expiración de 8 horas. Refresh token almacenado en cookie HttpOnly para prevenir XSS.</p>
+        </div>
+        </div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-layer" style="border-left:4px solid #0e9f6e;">
+        <div class="arch-layer-label">Capa 2 — Autorización RBAC</div>
+        <div class="arch-layer-content">
+            <h4>Control de Acceso Basado en Roles</h4>
+            <p>Cada ruta y acción verifica el rol del usuario antes de ejecutarse. Los permisos están definidos en una matriz centralizada: Administrador hereda todos los permisos de Editor y Lector.</p>
+        </div>
+        </div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-layer" style="border-left:4px solid #f59e0b;">
+        <div class="arch-layer-label">Capa 3 — Auditoría</div>
+        <div class="arch-layer-content">
+            <h4>Historial inmutable + Diff View</h4>
+            <p>Cada acción (crear, editar, eliminar, cambiar rol) queda registrada con timestamp, usuario, IP y detalle del cambio. El diff view muestra exactamente qué texto fue modificado entre versiones.</p>
+        </div>
+        </div>
+    </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+    <div class="footer-inner">
+    <div class="footer-col">
+        <strong>Fase 3 — Seguridad y Roles</strong>
+        <p>RBAC · 3 roles · Historial de versiones · Auditoría completa</p>
+    </div>
+    <div class="footer-col">
+        <strong>Tecnología</strong>
+        <p>JWT · bcrypt · MediaWiki RBAC · Diff view</p>
+    </div>
+    <div class="footer-col">
+        <strong>Puntaje</strong>
+        <p>Dr. Ing. Julio Arboleda H. · Junio 2026</p>
+    </div>
+    </div>
+    <div class="footer-bottom">
+    <p>© 2026 Proyecto Final GC · UTP · Gestión del Conocimiento en ONGs y Proyectos de Desarrollo Social</p>
+    </div>
+</footer>
+
+<script src="../js/main.js"></script>
+<script>
+    // ─────────────────────────────────────────
+    // BASE DE DATOS DE USUARIOS Y ROLES
+    // ─────────────────────────────────────────
+    const USERS = {
+    'admin@ong.pe':  { pass:'admin123',  nombre:'Ana García',     rol:'admin',  avatar:'👑' },
+    'editor@ong.pe': { pass:'editor123', nombre:'Luis Paredes',   rol:'editor', avatar:'✏️' },
+    'lector@ong.pe': { pass:'lector123', nombre:'María Torres',   rol:'lector', avatar:'👁'  }
+    };
+
+    const ROLES = {
+    admin:  { label:'Administrador', color:'#4f46e5', bg:'#ede9fe',
+        perms:['Ver artículos','Buscar','Crear artículos','Editar cualquier artículo','Eliminar artículos','Ver historial','Restaurar versiones','Gestionar usuarios','Ver auditoría','Cambiar roles'] },
+    editor: { label:'Editor',        color:'#0e9f6e', bg:'#d1fae5',
+        perms:['Ver artículos','Buscar','Crear artículos','Editar artículos propios','Ver historial de versiones'] },
+    lector: { label:'Lector',        color:'#6b7280', bg:'#f3f4f6',
+        perms:['Ver artículos públicos','Buscar en el portal'] }
+    };
+
+    const PERMS = {
+    crearEditar: ['admin','editor'],
+    historial:   ['admin','editor'],
+    usuarios:    ['admin'],
+    auditoria:   ['admin']
+    };
+
+    // ─────────────────────────────────────────
+    // ARTÍCULOS DE MUESTRA
+    // ─────────────────────────────────────────
+    const ARTICULOS = [
+    { id:1, titulo:'Guía Ley N° 28882 — ONGs',        categoria:'Marco Legal', autor:'Ana García',   fecha:'2026-06-10', estado:'publicado' },
+    { id:2, titulo:'Manual del Voluntario',            categoria:'RRHH',        autor:'Luis Paredes', fecha:'2026-06-08', estado:'publicado' },
+    { id:3, titulo:'Marco Lógico para Proyectos',      categoria:'Proyectos',   autor:'Luis Paredes', fecha:'2026-06-05', estado:'publicado' },
+    { id:4, titulo:'Código de Conducta Institucional', categoria:'Gobierno',    autor:'Ana García',   fecha:'2026-05-28', estado:'publicado' },
+    { id:5, titulo:'Caso Huancavelica 2024',           categoria:'Inst.',       autor:'Ana García',   fecha:'2026-05-20', estado:'borrador'  }
+    ];
+
+    const VERSIONES = [
+    { art:'Guía Ley N° 28882', version:'v3', autor:'Ana García',   fecha:'2026-06-10 09:14', resumen:'Actualización de enlace oficial APCI', diff:{ old:'ver norma en apci.gob.pe/legal', nuevo:'ver norma en apci.gob.pe/index.php/marco-legal/leyes' } },
+    { art:'Manual del Voluntario', version:'v2', autor:'Luis Paredes', fecha:'2026-06-08 14:30', resumen:'Agregada sección de seguridad en campo', diff:{ old:'(sección no existía)', nuevo:'## Seguridad en Campo\nSiempre informar al coordinador antes de ir a zona de riesgo.' } },
+    { art:'Marco Lógico',  version:'v2', autor:'Luis Paredes', fecha:'2026-06-05 11:00', resumen:'Corrección de indicadores ODS', diff:{ old:'Indicador: % de beneficiarios', nuevo:'Indicador: % de beneficiarios directos (desagregado por sexo)' } },
+    { art:'Código de Conducta', version:'v4', autor:'Ana García', fecha:'2026-05-28 16:45', resumen:'Revisión legal por asesor externo', diff:{ old:'Art. 5: Los miembros deben...', nuevo:'Art. 5: Todos los miembros y colaboradores deben...' } }
+    ];
+
+    const AUDIT_LOG = [
+    { ts:'2026-06-10 09:14', user:'admin@ong.pe', accion:'EDITAR',    detalle:'Artículo "Guía Ley N° 28882" → versión v3' },
+    { ts:'2026-06-09 17:02', user:'admin@ong.pe', accion:'CAMBIO ROL', detalle:'editor@ong.pe: lector → editor' },
+    { ts:'2026-06-08 14:30', user:'editor@ong.pe', accion:'EDITAR',   detalle:'Artículo "Manual del Voluntario" → versión v2' },
+    { ts:'2026-06-07 10:15', user:'lector@ong.pe', accion:'ACCESO',   detalle:'Inicio de sesión exitoso' },
+    { ts:'2026-06-05 11:00', user:'editor@ong.pe', accion:'EDITAR',   detalle:'Artículo "Marco Lógico" → versión v2' },
+    { ts:'2026-06-03 09:00', user:'admin@ong.pe', accion:'CREAR',     detalle:'Usuario lector@ong.pe creado con rol Lector' },
+    { ts:'2026-06-01 08:30', user:'admin@ong.pe', accion:'CREAR',     detalle:'Usuario editor@ong.pe creado con rol Editor' }
+    ];
+
+    // ─────────────────────────────────────────
+    // ESTADO DE SESIÓN
+    // ─────────────────────────────────────────
+    let currentUser = null;
+    let sessionStart = null;
+
+    // ─────────────────────────────────────────
+    // LOGIN
+    // ─────────────────────────────────────────
+    function fillCred(u, p) {
+    document.getElementById('loginUser').value = u;
+    document.getElementById('loginPass').value = p;
+    }
+
+    function togglePw() {
+    const f = document.getElementById('loginPass');
+    f.type = f.type === 'password' ? 'text' : 'password';
+    }
+
+    function doLogin() {
+    const u = document.getElementById('loginUser').value.trim();
+    const p = document.getElementById('loginPass').value;
+    const err = document.getElementById('loginError');
+    if (USERS[u] && USERS[u].pass === p) {
+        err.classList.add('hidden');
+        currentUser = { email: u, ...USERS[u] };
+        sessionStart = new Date();
+        showDashboard();
+    } else {
+        err.classList.remove('hidden');
+    }
+    }
+
+    function doLogout() {
+    addAuditEntry(currentUser.email, 'CIERRE SESIÓN', 'Sesión cerrada correctamente');
+    currentUser = null;
+    document.getElementById('dashboardScreen').classList.add('hidden');
+    document.getElementById('loginScreen').classList.remove('hidden');
+    document.getElementById('loginUser').value = '';
+    document.getElementById('loginPass').value = '';
+    }
+
+    // ─────────────────────────────────────────
+    // DASHBOARD
+    // ─────────────────────────────────────────
+    function showDashboard() {
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('dashboardScreen').classList.remove('hidden');
+
+    const rol = ROLES[currentUser.rol];
+
+      // Session bar
+    document.getElementById('sessionAvatar').textContent = currentUser.avatar;
+    document.getElementById('sessionName').textContent   = currentUser.nombre;
+    const badge = document.getElementById('sessionRole');
+    badge.textContent   = rol.label;
+    badge.style.background = rol.bg;
+    badge.style.color      = rol.color;
+
+      // Timer de sesión
+    updateTimer();
+    setInterval(updateTimer, 60000);
+
+      // Permisos en sidebar
+    const permsList = document.getElementById('rolePermsList');
+    permsList.innerHTML = rol.perms.map(p => `<li>✅ ${p}</li>`).join('');
+
+      // Bloquear/mostrar tabs según rol
+    applyRoleLocks();
+
+      // Cargar datos en tabs
+    renderArticulos();
+    renderVersiones();
+    renderUsuarios();
+    renderAuditoria();
+
+      // Registrar acceso en auditoría
+    addAuditEntry(currentUser.email, 'ACCESO', 'Inicio de sesión exitoso — Rol: ' + rol.label);
+    showTab('tab-overview', document.querySelector('.dash-nav-item'));
+    }
+
+    function updateTimer() {
+    if (!sessionStart) return;
+    const mins = Math.floor((new Date() - sessionStart) / 60000);
+    document.getElementById('sessionTime').textContent =
+        mins === 0 ? 'Sesión iniciada hace un momento' : `Sesión activa: ${mins} min`;
+    }
+
+    function applyRoleLocks() {
+    const r = currentUser.rol;
+    const canEdit    = PERMS.crearEditar.includes(r);
+    const canHistory = PERMS.historial.includes(r);
+    const canUsers   = PERMS.usuarios.includes(r);
+    const canAudit   = PERMS.auditoria.includes(r);
+
+      // Editor tab
+    setTabLock('tab-editor',    'editorLocked',    'editorForm',    !canEdit);
+    setTabLock('tab-versiones', 'versionesLocked', 'versionesContent', !canHistory);
+    setTabLock('tab-usuarios',  'usuariosLocked',  'usuariosContent',  !canUsers);
+    setTabLock('tab-auditoria', 'auditoriaLocked', 'auditoriaContent', !canAudit);
+
+      // Botón nuevo artículo
+    const btn = document.getElementById('btnNuevoArt');
+    if (btn) btn.style.display = canEdit ? 'inline-flex' : 'none';
+    }
+
+    function setTabLock(tabId, lockId, contentId, locked) {
+    document.getElementById(lockId).classList.toggle('hidden', !locked);
+    document.getElementById(contentId).classList.toggle('hidden', locked);
+    }
+
+    function showTab(tabId, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+    document.querySelectorAll('.dash-nav-item').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.remove('hidden');
+    if (btn) btn.classList.add('active');
+    }
+
+    // ─────────────────────────────────────────
+    // RENDER TABS
+    // ─────────────────────────────────────────
+    function renderArticulos() {
+    const r = currentUser.rol;
+    const canEdit   = PERMS.crearEditar.includes(r);
+    const canDelete = r === 'admin';
+    const tbody = document.getElementById('articulosTableBody');
+    tbody.innerHTML = ARTICULOS.map(a => `
+        <tr>
+        <td><strong>${a.titulo}</strong></td>
+        <td>${a.categoria}</td>
+        <td>${a.autor}</td>
+        <td>${a.fecha}</td>
+        <td class="actions-cell">
+            ${canEdit   ? `<button class="btn-action btn-edit" onclick="alert('Editando: ${a.titulo}')">✏️ Editar</button>` : ''}
+            ${canDelete ? `<button class="btn-action btn-del"  onclick="confirmDelete('${a.titulo}')">🗑 Eliminar</button>` : ''}
+            ${!canEdit  ? `<span class="btn-action btn-view">👁 Solo lectura</span>` : ''}
+        </td>
+        </tr>
+    `).join('');
+    }
+
+    function confirmDelete(titulo) {
+    if (confirm(`¿Eliminar "${titulo}"? Esta acción quedará registrada en auditoría.`)) {
+        addAuditEntry(currentUser.email, 'ELIMINAR', `Artículo "${titulo}" eliminado`);
+        alert('Artículo eliminado. Acción registrada en auditoría.');
+        renderAuditoria();
+    }
+    }
+
+    function renderVersiones() {
+    const list = document.getElementById('versionsList');
+    list.innerHTML = VERSIONES.map((v, i) => `
+        <div class="version-card">
+        <div class="version-header">
+            <span class="version-badge">${v.version}</span>
+            <strong>${v.art}</strong>
+            <span class="version-meta">por ${v.autor} · ${v.fecha}</span>
+            ${currentUser.rol === 'admin'
+            ? `<button class="btn-restore" onclick="restoreVersion('${v.art}', '${v.version}')">↩ Restaurar</button>`
+            : ''}
+        </div>
+        <p class="version-resumen">📝 ${v.resumen}</p>
+        <div class="diff-view">
+            <div class="diff-old">− ${v.diff.old}</div>
+            <div class="diff-new">+ ${v.diff.nuevo}</div>
+        </div>
+        </div>
+    `).join('');
+    }
+
+    function restoreVersion(art, ver) {
+    if (confirm(`¿Restaurar "${art}" a la ${ver}? Esto creará una nueva versión.`)) {
+        addAuditEntry(currentUser.email, 'RESTAURAR', `"${art}" restaurado a ${ver}`);
+        alert(`Versión ${ver} restaurada. Acción registrada en auditoría.`);
+        renderAuditoria();
+    }
+    }
+
+    function renderUsuarios() {
+    const tbody = document.getElementById('usuariosTableBody');
+    tbody.innerHTML = Object.entries(USERS).map(([email, u]) => `
+        <tr>
+        <td>${u.avatar} ${u.nombre}</td>
+        <td>${email}</td>
+        <td>
+            <select class="role-select" onchange="cambiarRol('${email}', this.value)">
+            <option value="admin"  ${u.rol==='admin'  ? 'selected':''}>👑 Administrador</option>
+            <option value="editor" ${u.rol==='editor' ? 'selected':''}>✏️ Editor</option>
+            <option value="lector" ${u.rol==='lector' ? 'selected':''}>👁 Lector</option>
+            </select>
+        </td>
+        <td>${email === currentUser.email ? '🟢 Ahora' : 'Hoy'}</td>
+        <td>
+            <button class="btn-action btn-edit" onclick="alert('Editando usuario: ${u.nombre}')">✏️ Editar</button>
+        </td>
+        </tr>
+    `).join('');
+    }
+
+    function cambiarRol(email, nuevoRol) {
+    const rolAnterior = USERS[email].rol;
+    USERS[email].rol = nuevoRol;
+    addAuditEntry(currentUser.email, 'CAMBIO ROL',
+        `${email}: ${ROLES[rolAnterior].label} → ${ROLES[nuevoRol].label}`);
+    renderAuditoria();
+    }
+
+    function renderAuditoria() {
+    const log = document.getElementById('auditoriaLog');
+    log.innerHTML = AUDIT_LOG.slice().reverse().map(e => `
+        <div class="audit-entry">
+        <span class="audit-ts">${e.ts}</span>
+        <span class="audit-user">${e.user}</span>
+        <span class="audit-action audit-${e.accion.toLowerCase().replace(' ','-')}">${e.accion}</span>
+        <span class="audit-detail">${e.detalle}</span>
+        </div>
+    `).join('');
+    }
+
+    function addAuditEntry(user, accion, detalle) {
+    const now = new Date();
+    const ts = now.toISOString().replace('T',' ').slice(0,16);
+    AUDIT_LOG.push({ ts, user, accion, detalle });
+    }
+
+    // ─────────────────────────────────────────
+    // EDITOR MARKDOWN
+    // ─────────────────────────────────────────
+    function insertMd(before, after) {
+    const ta = document.getElementById('artContenido');
+    const s = ta.selectionStart, e = ta.selectionEnd;
+    const sel = ta.value.substring(s, e);
+    ta.value = ta.value.substring(0, s) + before + sel + after + ta.value.substring(e);
+    ta.focus();
+    }
+
+    function togglePreview() {
+    const panel = document.getElementById('previewPanel');
+    const hidden = panel.classList.toggle('hidden');
+    if (!hidden) {
+        const md = document.getElementById('artContenido').value;
+        document.getElementById('previewContent').innerHTML = md
+        .replace(/## (.+)/g, '<h3>$1</h3>')
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g, '<em>$1</em>')
+        .replace(/- (.+)/g, '<li>$1</li>')
+        .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank">$1</a>')
+        .split('\n').join('<br>');
+    }
+    }
+
+    function guardarArticulo(estado) {
+    const titulo = document.getElementById('artTitulo').value.trim();
+    const cat    = document.getElementById('artCategoria').value;
+    if (!titulo || !cat) {
+        alert('Por favor completa el título y la categoría.');
+        return;
+    }
+    const fb = document.getElementById('editorFeedback');
+    fb.className = 'editor-feedback ' + (estado === 'publicado' ? 'fb-ok' : 'fb-draft');
+    fb.textContent = estado === 'publicado'
+        ? `✅ Artículo "${titulo}" publicado correctamente.`
+        : `💾 Borrador "${titulo}" guardado. Puedes continuar editando.`;
+    fb.classList.remove('hidden');
+    addAuditEntry(currentUser.email,
+        estado === 'publicado' ? 'PUBLICAR' : 'BORRADOR',
+        `Artículo "${titulo}" (${cat})`);
+    renderAuditoria();
+    setTimeout(() => fb.classList.add('hidden'), 4000);
+    }
+</script>
+</body>
+</html>
