@@ -132,7 +132,7 @@ function doSearch() {
     resultsDiv.innerHTML = `
       <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:16px;color:#92400e;">
         <strong>🔍 Sin resultados para "${query}"</strong>
-        <p style="font-size:13px;margin-top:4px;">Esta búsqueda se registra automáticamente para el análisis de brechas de conocimiento (Fase 2 — CirrusSearch). El administrador recibirá una alerta y creará el artículo correspondiente.</p>
+        <p style="font-size:13px;margin-top:4px;">Esta búsqueda se registra automáticamente para el análisis de brechas de conocimiento El administrador recibirá una alerta y creará el artículo correspondiente.</p>
       </div>`;
     return;
   }

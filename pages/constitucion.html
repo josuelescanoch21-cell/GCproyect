@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Constitución Legal de una ONG · Portal GC ONGs</title>
   <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
   <style>
     .steps-grid {
       display: grid;
@@ -73,25 +74,33 @@
   </style>
 </head>
 <body>
-
-  <header class="site-header">
-    <div class="header-inner">
-      <div class="brand">
-        <span class="brand-icon">🌐</span>
-        <div>
-          <span class="brand-title">Portal GC — ONGs Perú</span>
-          <span class="brand-sub">Gestión del Conocimiento · UTP Semana 11</span>
-        </div>
+<div class="dash-shell">
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo">🌐</div>
+      <div>
+        <h1>Portal GC</h1>
+        <span>ONGs Perú</span>
       </div>
-      <nav class="main-nav">
-        <a href="../index.html" class="nav-link">Inicio</a>
-        <a href="fase1.html" class="nav-link">Fase 1 — Taxonomía</a>
-        <a href="fase2.html" class="nav-link">Fase 2 — Búsqueda</a>
-        <a href="marco-legal.html" class="nav-link">Marco Legal</a>
-        <a href="constitucion.html" class="nav-link active">Constitución ONG</a>
-      </nav>
     </div>
-  </header>
+    <nav class="side-nav">
+      <span class="nav-label">General</span>
+      <a href="../index.html" class="side-link "><span class="ico">🏠</span> Inicio</a>
+      <a href="../pages/fase1.html" class="side-link "><span class="ico">🗂️</span> Categorías</a>
+      <a href="../pages/fase2.html" class="side-link "><span class="ico">🔍</span> Buscador</a>
+      <a href="../pages/fase3.html" class="side-link "><span class="ico">🔐</span> Seguridad y Roles</a>
+      <a href="../pages/admin.html" class="side-link "><span class="ico">🛠️</span> Panel Admin</a>
+
+      <span class="nav-label">Conocimiento</span>
+      <a href="../pages/marco-legal.html" class="side-link "><span class="ico">📋</span> Marco Legal</a>
+      <a href="../pages/constitucion.html" class="side-link active"><span class="ico">🏢</span> Constitución ONG</a>
+    </nav>
+    <div class="sidebar-footer">
+      Portal GC · Gestión del Conocimiento
+    </div>
+  </aside>
+  <main class="main">
+
 
   <div class="page-header">
     <div class="container">
@@ -214,14 +223,9 @@
     </div>
   </section>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <div class="footer-col"><strong>Constitución ONG</strong><p>8 pasos para formalizar una ONG en el Perú · Entidades: Notaría, SUNARP, SUNAT, APCI, MINJUSDH</p></div>
-      <div class="footer-col"><strong>Base Legal</strong><p>Ley 28882 · D.S. 015-92-PCM · Código Civil Libro I Sección II</p></div>
-      <div class="footer-col"><strong>Proyecto Final GC</strong><p>Dr. Ing. Julio Arboleda H. · UTP · Junio 2026</p></div>
-    </div>
-    <div class="footer-bottom"><p>© 2026 Proyecto Final GC · UTP · Gestión del Conocimiento en ONGs y Proyectos de Desarrollo Social</p></div>
-  </footer>
+    </main>
+</div>
+
 
   <script src="../js/main.js"></script>
 </body>

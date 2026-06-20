@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Panel Admin · Portal GC ONGs</title>
+<link rel="stylesheet" href="../css/dashboard.css" />
+<style>
+  .form-card{max-width:560px;}
+  .form-group{margin-bottom:14px;}
+  .form-group label{display:block;font-size:12.5px;font-weight:600;margin-bottom:5px;color:var(--text);}
+  .form-group input, .form-group textarea, .form-group select{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:13.5px;}
+  .form-group textarea{resize:vertical;min-height:64px;}
+  .btn-save{background:var(--amber);color:var(--navy);border:none;padding:10px 20px;border-radius:8px;font-weight:600;font-size:13.5px;cursor:pointer;}
+  .tab-row{display:flex;gap:8px;margin-bottom:20px;}
+  .tab-btn{padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;font-weight:600;cursor:pointer;color:var(--muted);}
+  .tab-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .hidden{display:none;}
+  .notice{font-size:13px;padding:10px 14px;border-radius:8px;margin-bottom:14px;}
+  .notice.ok{background:#e3f6ec;color:var(--green);}
+  .notice.err{background:#fdebe9;color:var(--red);}
+  .gate{max-width:380px;}
+</style>
+</head>
+<body>
+<div class="dash-shell">
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo">🌐</div>
+      <div><h1>Portal GC</h1><span>ONGs Perú</span></div>
+    </div>
+    <nav class="side-nav">
+      <span class="nav-label">General</span>
+      <a href="../index.html" class="side-link"><span class="ico">🏠</span> Inicio</a>
+      <a href="fase1.html" class="side-link"><span class="ico">🗂️</span> Categorías</a>
+      <a href="fase2.html" class="side-link"><span class="ico">🔍</span> Buscador</a>
+      <a href="fase3.html" class="side-link"><span class="ico">🔐</span> Seguridad y Roles</a>
+      <a href="admin.html" class="side-link active"><span class="ico">🛠️</span> Panel Admin</a>
+      <span class="nav-label">Conocimiento</span>
+      <a href="marco-legal.html" class="side-link"><span class="ico">📋</span> Marco Legal</a>
+      <a href="constitucion.html" class="side-link"><span class="ico">🏢</span> Constitución ONG</a>
+    </nav>
+    <div class="sidebar-footer">Portal GC · Gestión del Conocimiento</div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h2>Panel de Administración</h2>
+        <p class="sub">Agrega leyes nuevas, modificaciones normativas y trámites por vencer</p>
+      </div>
+      <div class="user-chip" id="userChip" style="display:none;">
+        <div class="avatar" id="userAvatar">A</div>
+        <div>
+          <div style="font-size:13px;font-weight:600;" id="userName">—</div>
+          <div class="role" id="userRole">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOGIN GATE -->
+    <div id="loginGate" class="card gate">
+      <h3>Iniciar sesión</h3>
+      <p class="sub" style="margin-bottom:16px;">Solo usuarios con rol Editor o Administrador pueden publicar contenido.</p>
+      <div id="loginNotice"></div>
+      <div class="form-group">
+        <label>Correo</label>
+        <input type="email" id="loginEmail" placeholder="admin@tuong.org" />
+      </div>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" />
+      </div>
+      <button class="btn-save" id="loginBtn">Ingresar</button>
+      <p style="font-size:12px;color:var(--muted);margin-top:14px;">
+        ¿Aún no conectaste Supabase? Revisa <code>SUPABASE_SETUP.md</code>. Sin conexión, este panel funciona en modo demo (no guarda datos reales).
+      </p>
+    </div>
+
+    <!-- ADMIN CONTENT (oculto hasta iniciar sesión) -->
+    <div id="adminContent" class="hidden">
+      <div class="tab-row">
+        <button class="tab-btn active" data-tab="leyes">📋 Leyes y normativa</button>
+        <button class="tab-btn" data-tab="licencias">⏰ Licencias / trámites por vencer</button>
+        <button class="tab-btn" data-tab="lista">📚 Ver registrados</button>
+      </div>
+
+      <!-- TAB: LEYES -->
+      <section id="tabLeyes" class="card form-card">
+        <h3>Nueva ley o modificación</h3>
+        <p class="sub" style="margin-bottom:16px;">Esto crea una vista rápida en el buscador: título + párrafo corto + enlace a la norma completa.</p>
+        <div id="lawNotice"></div>
+        <div class="form-group">
+          <label>Título de la norma</label>
+          <input type="text" id="lawTitle" placeholder="Ej: Ley N° 28882 — Ley de las ONG" />
+        </div>
+        <div class="form-group">
+          <label>Resumen corto (vista rápida, 1 párrafo)</label>
+          <textarea id="lawSnippet" placeholder="Resume en 2-3 líneas qué regula esta norma y a quién afecta..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Entidad que la emite</label>
+          <input type="text" id="lawEntidad" placeholder="APCI, SUNAT, SUNARP, MINJUSDH..." />
+        </div>
+        <div class="form-group">
+          <label>Enlace "Ver más información" (norma oficial completa)</label>
+          <input type="url" id="lawLink" placeholder="https://www.gob.pe/..." />
+        </div>
+        <div class="form-group">
+          <label>Etiquetas (separadas por coma)</label>
+          <input type="text" id="lawTags" placeholder="#ley, #vigente, #APCI" />
+        </div>
+        <button class="btn-save" id="lawSaveBtn">Publicar ley</button>
+      </section>
+
+      <!-- TAB: LICENCIAS -->
+      <section id="tabLicencias" class="card form-card hidden">
+        <h3>Nuevo trámite o licencia por vencer</h3>
+        <p class="sub" style="margin-bottom:16px;">Aparecerá automáticamente en el widget "Documentos por vencer" del inicio.</p>
+        <div id="licenseNotice"></div>
+        <div class="form-group">
+          <label>Nombre del trámite / licencia</label>
+          <input type="text" id="licTitle" placeholder="Ej: Informe Anual APCI 2026" />
+        </div>
+        <div class="form-group">
+          <label>Entidad responsable</label>
+          <input type="text" id="licEntidad" placeholder="APCI, SUNAT, Municipalidad..." />
+        </div>
+        <div class="form-group">
+          <label>Fecha de vencimiento</label>
+          <input type="date" id="licFecha" />
+        </div>
+        <div class="form-group">
+          <label>Notas (opcional)</label>
+          <textarea id="licSnippet" placeholder="Qué falta para completarlo, contacto, requisitos..."></textarea>
+        </div>
+        <button class="btn-save" id="licSaveBtn">Registrar vencimiento</button>
+      </section>
+
+      <!-- TAB: LISTA -->
+      <section id="tabLista" class="card hidden">
+        <h3>Leyes y licencias registradas</h3>
+        <div id="adminList" style="margin-top:14px;"></div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<script type="module" src="../js/admin.js"></script>
+</body>
+</html>
