@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal GC — ONGs y Proyectos de Desarrollo Social</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/home.css" />
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-icon">🌐</span>
+        <div>
+          <span class="brand-title">Portal GC — ONGs Perú</span>
+          <span class="brand-sub">Gestión del Conocimiento · UTP Semana 11</span>
+        </div>
+      </div>
+      <nav class="main-nav">
+        <a href="index.html" class="nav-link active">Inicio</a>
+        <a href="pages/fase1.html" class="nav-link">Fase 1 — Taxonomía</a>
+        <a href="pages/fase2.html" class="nav-link">Fase 2 — Búsqueda</a>
+        <a href="pages/marco-legal.html" class="nav-link">Marco Legal</a>
+        <a href="pages/constitucion.html" class="nav-link">Constitución ONG</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">Proyecto Final · Dr. Ing. Julio Arboleda H. · Junio 2026</div>
+      <h1 class="hero-title">Gestión del Conocimiento<br>en ONGs y Proyectos<br>de Desarrollo Social</h1>
+      <p class="hero-desc">Sistema de GC basado en MediaWiki + Elasticsearch para organizaciones sin fines de lucro en el Perú. Fases 1 y 2 implementadas.</p>
+      <div class="hero-actions">
+        <a href="pages/fase1.html" class="btn btn-primary">📋 Ver Fase 1 — Taxonomía</a>
+        <a href="pages/fase2.html" class="btn btn-secondary">🔍 Ver Fase 2 — Búsqueda</a>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-card">
+        <span class="stat-num">6</span>
+        <span class="stat-label">Categorías principales</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">8</span>
+        <span class="stat-label">Filtros de búsqueda</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">10</span>
+        <span class="stat-label">Normas legales cubiertas</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEARCH BAR DEMO -->
+  <section class="search-section">
+    <div class="container">
+      <h2 class="section-title">🔍 Motor de Búsqueda — Fase 2 (Demo)</h2>
+      <p class="section-sub">Búsqueda predictiva con Elasticsearch + CirrusSearch · &lt;200ms de respuesta</p>
+      <div class="search-box-wrapper">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" class="search-input" placeholder="Buscar: Ley 28882, APCI, voluntariado, rendición de cuentas..." autocomplete="off" />
+          <button class="search-btn" onclick="doSearch()">Buscar</button>
+        </div>
+        <div id="suggestions" class="suggestions hidden"></div>
+      </div>
+      <div class="search-tags">
+        <span class="tag-label">Búsquedas frecuentes:</span>
+        <button class="quick-tag" onclick="setSearch('Ley 28882')">Ley 28882</button>
+        <button class="quick-tag" onclick="setSearch('APCI registro')">APCI registro</button>
+        <button class="quick-tag" onclick="setSearch('manual voluntario')">Manual voluntario</button>
+        <button class="quick-tag" onclick="setSearch('rendición cuentas')">Rendición cuentas</button>
+        <button class="quick-tag" onclick="setSearch('estatutos ONG')">Estatutos ONG</button>
+      </div>
+      <div id="searchResults" class="search-results hidden"></div>
+    </div>
+  </section>
+
+  <!-- PHASES OVERVIEW -->
+  <section class="phases-section">
+    <div class="container">
+      <h2 class="section-title">📌 Fases del Proyecto</h2>
+      <div class="phases-grid">
+        <div class="phase-card phase-done">
+          <div class="phase-header">
+            <span class="phase-num">01</span>
+            <span class="phase-badge badge-done">✔ Implementada</span>
+          </div>
+          <h3>Arquitectura de Información y Taxonomía</h3>
+          <p>Estructura jerárquica en 3 niveles con 6 categorías principales, sistema de etiquetas multidimensional y regla de los 3 clics para localizar cualquier documento.</p>
+          <ul class="phase-items">
+            <li>✅ 6 categorías de primer nivel</li>
+            <li>✅ 30+ subcategorías especializadas</li>
+            <li>✅ Sistema de etiquetas (6 dimensiones)</li>
+            <li>✅ Regla de los 3 clics</li>
+          </ul>
+          <a href="pages/fase1.html" class="btn btn-outline">Ver Fase 1 →</a>
+        </div>
+
+        <div class="phase-card phase-done">
+          <div class="phase-header">
+            <span class="phase-num">02</span>
+            <span class="phase-badge badge-done">✔ Implementada</span>
+          </div>
+          <h3>Motor de Búsqueda y Recuperación</h3>
+          <p>CirrusSearch + Elasticsearch con búsqueda predictiva ultrarrápida, 8 filtros avanzados combinables y registro de búsquedas fallidas para analítica de brechas.</p>
+          <ul class="phase-items">
+            <li>✅ Búsqueda de texto completo (&lt;200ms)</li>
+            <li>✅ 8 tipos de filtros avanzados</li>
+            <li>✅ Autocompletado AJAX en tiempo real</li>
+            <li>✅ Analítica de búsquedas fallidas</li>
+          </ul>
+          <a href="pages/fase2.html" class="btn btn-outline">Ver Fase 2 →</a>
+        </div>
+
+        <div class="phase-card phase-pending">
+          <div class="phase-header">
+            <span class="phase-num">03</span>
+            <span class="phase-badge badge-pending">🕐 Pendiente</span>
+          </div>
+          <h3>UX/UI y Accesibilidad del Frontend</h3>
+          <p>Skin Timeless responsive, editor WYSIWYG, dashboard de inicio con accesos rápidos, optimización para móviles y tablets.</p>
+          <ul class="phase-items">
+            <li>📌 Diseño responsive (móvil/tablet)</li>
+            <li>📌 Editor visual (VisualEditor)</li>
+            <li>📌 Dashboard de accesos rápidos</li>
+            <li>📌 Accesibilidad WCAG 2.1</li>
+          </ul>
+          <span class="btn btn-disabled">Próximamente</span>
+        </div>
+
+        <div class="phase-card phase-pending">
+          <div class="phase-header">
+            <span class="phase-num">04</span>
+            <span class="phase-badge badge-pending">🕐 Pendiente</span>
+          </div>
+          <h3>Seguridad, Roles y Gestión del Backend</h3>
+          <p>RBAC con 4 roles (Administrador, Editor, Lector, Revisor), historial de versiones con diff view para auditorías, tokens de sesión seguros.</p>
+          <ul class="phase-items">
+            <li>📌 4 roles de usuario (RBAC)</li>
+            <li>📌 Historial de versiones + diff view</li>
+            <li>📌 Sesiones seguras (HTTPS+tokens)</li>
+            <li>📌 Auditoría de cambios</li>
+          </ul>
+          <span class="btn btn-disabled">Próximamente</span>
+        </div>
+
+        <div class="phase-card phase-pending">
+          <div class="phase-header">
+            <span class="phase-num">05</span>
+            <span class="phase-badge badge-pending">🕐 Pendiente</span>
+          </div>
+          <h3>Analítica de Datos y Mejora Continua</h3>
+          <p>Panel analítico con EventLogging + Matomo, métricas de permanencia, artículos más leídos, brechas de conocimiento y efectividad del contenido.</p>
+          <ul class="phase-items">
+            <li>📌 Dashboard de métricas (Matomo)</li>
+            <li>📌 Artículos más consultados</li>
+            <li>📌 Brechas de conocimiento</li>
+            <li>📌 Reporte trimestral de brecha</li>
+          </ul>
+          <span class="btn btn-disabled">Próximamente</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORIES QUICK ACCESS -->
+  <section class="categories-section">
+    <div class="container">
+      <h2 class="section-title">📂 Categorías del Portal (Fase 1 — Taxonomía)</h2>
+      <div class="cat-grid">
+        <a href="pages/marco-legal.html" class="cat-card">
+          <span class="cat-icon">📋</span>
+          <h4>Marco Legal y Normativo</h4>
+          <p>Leyes nacionales, reglamentos APCI, normas tributarias, convenios internacionales</p>
+          <span class="cat-count">10 normas</span>
+        </a>
+        <a href="pages/constitucion.html" class="cat-card">
+          <span class="cat-icon">🏢</span>
+          <h4>Constitución y Gobierno</h4>
+          <p>Estatutos, actas de asamblea, junta directiva, reglamentos internos</p>
+          <span class="cat-count">8 pasos</span>
+        </a>
+        <a href="#" class="cat-card">
+          <span class="cat-icon">💰</span>
+          <h4>Gestión de Proyectos y Fondos</h4>
+          <p>Ciclo de proyecto, presupuestos, rendición de cuentas, informes de donantes</p>
+          <span class="cat-count">Próximamente</span>
+        </a>
+        <a href="#" class="cat-card">
+          <span class="cat-icon">👥</span>
+          <h4>Recursos Humanos y Voluntariado</h4>
+          <p>Reclutamiento, inducción, capacitación, bienestar del voluntario</p>
+          <span class="cat-count">Próximamente</span>
+        </a>
+        <a href="#" class="cat-card">
+          <span class="cat-icon">🎯</span>
+          <h4>Programas y Proyectos en Campo</h4>
+          <p>Educación, salud, medio ambiente, inclusión social, género</p>
+          <span class="cat-count">Próximamente</span>
+        </a>
+        <a href="#" class="cat-card">
+          <span class="cat-icon">📊</span>
+          <h4>Conocimiento Institucional</h4>
+          <p>Historia de la ONG, mejores prácticas, casos de éxito, publicaciones</p>
+          <span class="cat-count">Próximamente</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ALERTS WIDGET -->
+  <section class="alerts-section">
+    <div class="container">
+      <h2 class="section-title">⚠️ Documentos por Vencer / Renovar</h2>
+      <div class="alerts-grid">
+        <div class="alert-card alert-red">
+          <span class="alert-icon">🔴</span>
+          <div>
+            <strong>Informe Anual APCI 2025</strong>
+            <p>Vence en 15 días · Entidad: APCI</p>
+          </div>
+          <span class="alert-tag">#APCI #vigente</span>
+        </div>
+        <div class="alert-card alert-yellow">
+          <span class="alert-icon">🟡</span>
+          <div>
+            <strong>Declaración Jurada SUNAT</strong>
+            <p>Vence en 30 días · Entidad: SUNAT</p>
+          </div>
+          <span class="alert-tag">#SUNAT #vigente</span>
+        </div>
+        <div class="alert-card alert-yellow">
+          <span class="alert-icon">🟡</span>
+          <div>
+            <strong>Renovación Convenio GIZ</strong>
+            <p>Vence en 45 días · Entidad: MINJUSDH</p>
+          </div>
+          <span class="alert-tag">#MINJUSDH #en-revision</span>
+        </div>
+        <div class="alert-card alert-green">
+          <span class="alert-icon">🟢</span>
+          <div>
+            <strong>Registro SUNARP Vigente</strong>
+            <p>Renovado hace 2 meses · Entidad: SUNARP</p>
+          </div>
+          <span class="alert-tag">#SUNARP #vigente</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-col">
+        <strong>Portal GC — ONGs Perú</strong>
+        <p>Universidad Tecnológica del Perú<br>Facultad de Ingeniería de Sistemas y Electrónica<br>Curso: Gestión del Conocimiento — Semana 11</p>
+      </div>
+      <div class="footer-col">
+        <strong>Herramienta Base</strong>
+        <p>MediaWiki (Código Abierto)<br>Elasticsearch 8.x + CirrusSearch<br>Licencia: GPL — Sin costo de licencia</p>
+      </div>
+      <div class="footer-col">
+        <strong>Docente</strong>
+        <p>Dr. Ing. Julio Arboleda H.<br>Junio 2026</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Proyecto Final GC · UTP · Gestión del Conocimiento en ONGs y Proyectos de Desarrollo Social</p>
+    </div>
+  </footer>
+
+  <script src="js/search.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+/* ===== CLICKS FLOW ===== */
+.clicks-flow {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.click-step {
+  flex: 1;
+  min-width: 200px;
+  background: var(--white);
+  border: 2px solid var(--primary);
+  border-radius: var(--radius);
+  padding: 20px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.click-step-final { border-color: var(--secondary); }
+
+.click-num {
+  background: var(--primary);
+  color: var(--white);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+.click-step-final .click-num { background: var(--secondary); }
+
+.click-content strong { display: block; font-size: 15px; margin-bottom: 4px; }
+.click-content p { font-size: 13px; color: var(--text-muted); }
+.click-arrow { font-size: 24px; color: var(--text-muted); align-self: center; }
+
+/* ===== FEATURE ITEMS ===== */
+.feature-item {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+  list-style: none;
+}
+
+/* ===== TAXONOMY TREE ===== */
+.taxonomy-tree {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 16px;
+}
+
+.tree-category {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.tree-cat-header {
+  background: var(--primary);
+  color: var(--white);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  user-select: none;
+}
+
+.tree-cat-header:hover { background: var(--primary-dark); }
+.tree-icon { font-size: 20px; }
+.tree-toggle { margin-left: auto; font-size: 12px; }
+
+.tree-subs { padding: 8px; }
+
+.tree-sub {
+  margin-bottom: 6px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.tree-sub-header {
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  user-select: none;
+}
+
+.tree-sub-header:hover { background: #d0e4ff; }
+
+.tree-articles { padding: 6px 12px; }
+
+.tree-article {
+  padding: 5px 0;
+  font-size: 12px;
+  color: var(--text-muted);
+  border-bottom: 1px dashed var(--border);
+}
+
+.tree-article:last-child { border-bottom: none; }

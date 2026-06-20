@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fase 1 — Arquitectura de Información y Taxonomía · Portal GC ONGs</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/fase1.css" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-icon">🌐</span>
+        <div>
+          <span class="brand-title">Portal GC — ONGs Perú</span>
+          <span class="brand-sub">Gestión del Conocimiento · UTP Semana 11</span>
+        </div>
+      </div>
+      <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="fase1.html" class="nav-link active">Fase 1 — Taxonomía</a>
+        <a href="fase2.html" class="nav-link">Fase 2 — Búsqueda</a>
+        <a href="marco-legal.html" class="nav-link">Marco Legal</a>
+        <a href="constitucion.html" class="nav-link">Constitución ONG</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="container">
+      <div class="breadcrumb"><a href="../index.html">Inicio</a> → Fase 1</div>
+      <h1>📋 FASE 1 — Arquitectura de Información y Taxonomía</h1>
+      <p>Estructura jerárquica de conocimiento del portal, categorías, subcategorías, sistema de etiquetas y regla de los 3 clics.</p>
+      <div class="page-score">
+      </div>
+    </div>
+  </div>
+
+  <!-- DESCRIPTION -->
+  <section class="content-section">
+    <div class="container">
+      <div class="card">
+        <h2 class="card-title">4.1 Descripción de la Fase</h2>
+        <p>La Fase 1 establece la <strong>estructura jerárquica de conocimiento</strong> del portal, definiendo cómo se organizarán las categorías, subcategorías y artículos para que cualquier usuario pueda localizar la información en <strong>3 clics o menos</strong>. La taxonomía responde a las necesidades específicas de las ONGs peruanas: gestión legal, operaciones de campo, recursos humanos voluntarios y proyectos de desarrollo social.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAXONOMY TABLE -->
+  <section class="content-section">
+    <div class="container">
+      <h2 class="section-title">4.2 Taxonomía Principal del Portal</h2>
+      <p class="section-sub">Arquitectura en 3 niveles: Categoría → Subcategoría → Artículo</p>
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Categoría (Nivel 1)</th>
+              <th>Subcategorías (Nivel 2)</th>
+              <th>Artículos Tipo (Nivel 3)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>📋 Marco Legal y Normativo</strong></td>
+              <td>Leyes nacionales · Reglamentos APCI · Normas tributarias · Convenios internacionales</td>
+              <td>Guía Ley 28882 · Proceso de inscripción APCI · Exoneración SUNAT · Modelo convenio</td>
+            </tr>
+            <tr>
+              <td><strong>🏢 Constitución y Gobierno</strong></td>
+              <td>Estatutos · Actas de asamblea · Junta directiva · Reglamentos internos</td>
+              <td>Modelo de estatutos · Formato acta · Manual del directorio · Código de conducta</td>
+            </tr>
+            <tr>
+              <td><strong>💰 Gestión de Proyectos y Fondos</strong></td>
+              <td>Ciclo de proyecto · Presupuestos · Rendición de cuentas · Informes de donantes</td>
+              <td>Marco lógico · Plantilla presupuesto · Formato rendición · Informe USAID</td>
+            </tr>
+            <tr>
+              <td><strong>👥 Recursos Humanos y Voluntariado</strong></td>
+              <td>Reclutamiento · Inducción · Capacitación · Bienestar del voluntario</td>
+              <td>Manual del voluntario · Protocolo de inducción · Plan de capacitación · Evaluación</td>
+            </tr>
+            <tr>
+              <td><strong>🎯 Programas y Proyectos en Campo</strong></td>
+              <td>Educación · Salud · Medio ambiente · Inclusión social · Género</td>
+              <td>Ficha de proyecto · Línea base · Indicadores · Informe de campo · Lecciones aprendidas</td>
+            </tr>
+            <tr>
+              <td><strong>📊 Conocimiento Institucional</strong></td>
+              <td>Historia de la ONG · Mejores prácticas · Casos de éxito · Publicaciones</td>
+              <td>Cronología institucional · Caso de éxito modelo · Repositorio de publicaciones</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTERACTIVE TAXONOMY TREE -->
+  <section class="content-section" style="background:#f8faff;">
+    <div class="container">
+      <h2 class="section-title">🌳 Árbol de Taxonomía Interactivo</h2>
+      <p class="section-sub">Haz clic en cualquier categoría para expandir sus subcategorías y artículos.</p>
+      <div class="taxonomy-tree" id="taxonomyTree"></div>
+    </div>
+  </section>
+
+  <!-- TAGS TABLE -->
+  <section class="content-section">
+    <div class="container">
+      <h2 class="section-title">4.3 Sistema de Etiquetas (Tags) en MediaWiki</h2>
+      <p class="section-sub">6 dimensiones de etiquetado que permiten búsquedas transversales entre categorías</p>
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Dimensión de Etiqueta</th>
+              <th>Ejemplos de Valores</th>
+              <th>Uso en Búsqueda</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Tipo de Documento</strong></td>
+              <td>
+                <span class="tag">#ley</span>
+                <span class="tag">#reglamento</span>
+                <span class="tag">#manual</span>
+                <span class="tag">#informe</span>
+                <span class="tag">#plantilla</span>
+                <span class="tag">#caso-de-exito</span>
+              </td>
+              <td>Filtra por tipo de contenido sin importar la categoría</td>
+            </tr>
+            <tr>
+              <td><strong>Estado Legal</strong></td>
+              <td>
+                <span class="tag">#vigente</span>
+                <span class="tag">#derogado</span>
+                <span class="tag">#en-revision</span>
+                <span class="tag">#propuesto</span>
+              </td>
+              <td>Identifica si una norma está actualizada o fue reemplazada</td>
+            </tr>
+            <tr>
+              <td><strong>Entidad Reguladora</strong></td>
+              <td>
+                <span class="tag">#APCI</span>
+                <span class="tag">#SUNAT</span>
+                <span class="tag">#SUNARP</span>
+                <span class="tag">#MEF</span>
+                <span class="tag">#MINJUSDH</span>
+                <span class="tag">#PCM</span>
+              </td>
+              <td>Agrupa normas por institución responsable</td>
+            </tr>
+            <tr>
+              <td><strong>Fase del Proyecto</strong></td>
+              <td>
+                <span class="tag">#inicio</span>
+                <span class="tag">#planificacion</span>
+                <span class="tag">#ejecucion</span>
+                <span class="tag">#cierre</span>
+                <span class="tag">#evaluacion</span>
+              </td>
+              <td>Relaciona documentos con fases del ciclo de proyecto</td>
+            </tr>
+            <tr>
+              <td><strong>Población Objetivo</strong></td>
+              <td>
+                <span class="tag">#infancia</span>
+                <span class="tag">#mujer</span>
+                <span class="tag">#adulto-mayor</span>
+                <span class="tag">#discapacidad</span>
+                <span class="tag">#comunidad-rural</span>
+              </td>
+              <td>Filtra documentos por grupo beneficiario</td>
+            </tr>
+            <tr>
+              <td><strong>Nivel de Acceso</strong></td>
+              <td>
+                <span class="tag">#publico</span>
+                <span class="tag">#interno</span>
+                <span class="tag">#confidencial</span>
+                <span class="tag">#directivos</span>
+              </td>
+              <td>Controla la visibilidad del contenido según roles</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 CLICKS RULE -->
+  <section class="content-section" style="background:#f0fdf4;">
+    <div class="container">
+      <h2 class="section-title">4.4 Regla de los 3 Clics</h2>
+      <p class="section-sub">El portal garantiza acceso a cualquier documento crítico en 3 acciones desde la página principal</p>
+      <div class="clicks-flow">
+        <div class="click-step">
+          <div class="click-num">1</div>
+          <div class="click-content">
+            <strong>Página Principal → Categoría</strong>
+            <p>Seleccionar categoría de primer nivel<br><em>Ej: Marco Legal y Normativo</em></p>
+          </div>
+        </div>
+        <div class="click-arrow">→</div>
+        <div class="click-step">
+          <div class="click-num">2</div>
+          <div class="click-content">
+            <strong>Categoría → Subcategoría</strong>
+            <p>Elegir subcategoría específica<br><em>Ej: Leyes Nacionales → Ley N° 28882</em></p>
+          </div>
+        </div>
+        <div class="click-arrow">→</div>
+        <div class="click-step click-step-final">
+          <div class="click-num">3</div>
+          <div class="click-content">
+            <strong>Subcategoría → Artículo</strong>
+            <p>Llegar al documento específico<br><em>Ej: Guía práctica Ley 28882</em></p>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:24px;">
+        <h3 class="card-title">Elementos adicionales de la Página Principal</h3>
+        <ul style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:8px;">
+          <li class="feature-item">🔍 Buscador prominente con sugerencias en tiempo real</li>
+          <li class="feature-item">⭐ Accesos directos a los 10 documentos más consultados</li>
+          <li class="feature-item">📰 Sección 'Últimas actualizaciones legales'</li>
+          <li class="feature-item">⚠️ Widget 'Documentos por vencer / renovar'</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- RUBRIC EVAL -->
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-col">
+        <strong>Fase 1 — Taxonomía</strong>
+        <p>Arquitectura de información jerarquica en 3 niveles · 6 categorías · 30+ subcategorías · Sistema de etiquetas 6D</p>
+      </div>
+      <div class="footer-col">
+        <strong>Herramienta</strong>
+        <p>MediaWiki Core · Extension:CirrusSearch · Extension:VisualEditor · Elasticsearch 8.x</p>
+      </div>
+      <div class="footer-col">
+        <strong>Puntaje</strong>
+        <p>Dr. Ing. Julio Arboleda H. · Junio 2026</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Proyecto Final GC · UTP · Gestión del Conocimiento en ONGs y Proyectos de Desarrollo Social</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    // Interactive taxonomy tree
+    const TAXONOMY = [
+      {
+        icon: "📋", name: "Marco Legal y Normativo",
+        subs: [
+          { name: "Leyes Nacionales", articles: ["Guía Ley N° 28882", "Guía Ley N° 29733", "Guía Ley N° 27806"] },
+          { name: "Reglamentos APCI", articles: ["D.S. 015-92-PCM", "Resoluciones Directorales APCI", "Guía Informe Anual"] },
+          { name: "Normas Tributarias", articles: ["Exoneración SUNAT Art. 19 LIR", "Guía RUC ONG", "Declaración Jurada Anual"] },
+          { name: "Convenios Internacionales", articles: ["Modelo Convenio USAID", "Modelo Convenio UE", "Formato Informe GIZ"] }
+        ]
+      },
+      {
+        icon: "🏢", name: "Constitución y Gobierno",
+        subs: [
+          { name: "Estatutos", articles: ["Modelo de Estatutos", "Guía de Reforma Estatutaria", "Checklist Estatutos SUNARP"] },
+          { name: "Actas de Asamblea", articles: ["Formato Acta Ordinaria", "Formato Acta Extraordinaria", "Libro de Actas Digital"] },
+          { name: "Junta Directiva", articles: ["Manual del Directorio", "Código de Conducta", "Reglamento de Sesiones"] }
+        ]
+      },
+      {
+        icon: "💰", name: "Gestión de Proyectos y Fondos",
+        subs: [
+          { name: "Ciclo de Proyecto", articles: ["Marco Lógico", "Plan de Trabajo", "Cronograma Gantt"] },
+          { name: "Presupuestos", articles: ["Plantilla Presupuesto", "Guía de Costeo", "Control Presupuestal"] },
+          { name: "Rendición de Cuentas", articles: ["Formato Rendición USAID", "Informe Financiero Trimestral", "Auditoría Interna"] }
+        ]
+      },
+      {
+        icon: "👥", name: "Recursos Humanos y Voluntariado",
+        subs: [
+          { name: "Reclutamiento", articles: ["Protocolo de Selección", "Formulario de Inscripción", "Entrevista de Ingreso"] },
+          { name: "Inducción", articles: ["Manual del Voluntario", "Protocolo de Inducción", "Presentación Institucional"] },
+          { name: "Capacitación", articles: ["Plan Anual de Capacitación", "Registro de Asistencia", "Evaluación Post-Formación"] }
+        ]
+      },
+      {
+        icon: "🎯", name: "Programas y Proyectos en Campo",
+        subs: [
+          { name: "Educación", articles: ["Ficha de Proyecto Educativo", "Línea Base Educativa", "Indicadores UNESCO"] },
+          { name: "Salud", articles: ["Protocolo de Intervención Salud", "Ficha Epidemiológica", "Indicadores OMS"] },
+          { name: "Inclusión Social", articles: ["Marco de Género", "Protocolo Anti-discriminación", "Indicadores ODS 10"] }
+        ]
+      },
+      {
+        icon: "📊", name: "Conocimiento Institucional",
+        subs: [
+          { name: "Historia y Cronología", articles: ["Cronología Institucional", "Hitos del Proyecto", "Galería de Evidencias"] },
+          { name: "Casos de Éxito", articles: ["Caso Huancavelica 2024", "Caso Selva Central 2023", "Plantilla Sistematización"] },
+          { name: "Publicaciones", articles: ["Repositorio de Informes", "Artículos Académicos", "Boletines Trimestrales"] }
+        ]
+      }
+    ];
+
+    function renderTree() {
+      const tree = document.getElementById('taxonomyTree');
+      tree.innerHTML = TAXONOMY.map((cat, ci) => `
+        <div class="tree-category">
+          <div class="tree-cat-header" onclick="toggleCat(${ci})">
+            <span class="tree-icon">${cat.icon}</span>
+            <strong>${cat.name}</strong>
+            <span class="tree-toggle" id="toggle-${ci}">▼</span>
+          </div>
+          <div class="tree-subs" id="subs-${ci}">
+            ${cat.subs.map((sub, si) => `
+              <div class="tree-sub">
+                <div class="tree-sub-header" onclick="toggleSub(${ci},${si})">
+                  📁 ${sub.name}
+                  <span class="tree-toggle" id="stoggle-${ci}-${si}">▼</span>
+                </div>
+                <div class="tree-articles" id="arts-${ci}-${si}">
+                  ${sub.articles.map(a => `<div class="tree-article">📄 ${a}</div>`).join('')}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleCat(ci) {
+      const el = document.getElementById(`subs-${ci}`);
+      const tog = document.getElementById(`toggle-${ci}`);
+      const hidden = el.style.display === 'none';
+      el.style.display = hidden ? 'block' : 'none';
+      tog.textContent = hidden ? '▼' : '▶';
+    }
+
+    function toggleSub(ci, si) {
+      const el = document.getElementById(`arts-${ci}-${si}`);
+      const tog = document.getElementById(`stoggle-${ci}-${si}`);
+      const hidden = el.style.display === 'none';
+      el.style.display = hidden ? 'block' : 'none';
+      tog.textContent = hidden ? '▼' : '▶';
+    }
+
+    renderTree();
+  </script>
+</body>
+</html>

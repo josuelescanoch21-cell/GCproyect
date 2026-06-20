@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fase 2 — Motor de Búsqueda y Recuperación · Portal GC ONGs</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/fase2.css" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-icon">🌐</span>
+        <div>
+          <span class="brand-title">Portal GC — ONGs Perú</span>
+          <span class="brand-sub">Gestión del Conocimiento · UTP Semana 11</span>
+        </div>
+      </div>
+      <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="fase1.html" class="nav-link">Fase 1 — Taxonomía</a>
+        <a href="fase2.html" class="nav-link active">Fase 2 — Búsqueda</a>
+        <a href="marco-legal.html" class="nav-link">Marco Legal</a>
+        <a href="constitucion.html" class="nav-link">Constitución ONG</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header" style="background:linear-gradient(135deg,#0e9f6e 0%,#065f46 100%);">
+    <div class="container">
+      <div class="breadcrumb"><a href="../index.html">Inicio</a> → Fase 2</div>
+      <h1>🔍 FASE 2 — Motor de Búsqueda y Recuperación</h1>
+      <p>Búsqueda predictiva ultrarrápida con CirrusSearch + Elasticsearch, 8 filtros avanzados combinables y analítica de brechas de conocimiento.</p>
+      <div class="page-score">
+      </div>
+    </div>
+  </div>
+
+  <!-- LIVE SEARCH DEMO -->
+  <section class="content-section" style="background:#f0fdf4;">
+    <div class="container">
+      <h2 class="section-title">🧪 Demo en Vivo — Motor de Búsqueda Avanzado</h2>
+      <p class="section-sub">Simula la búsqueda con Elasticsearch + CirrusSearch · Filtros combinables en tiempo real</p>
+
+      <!-- FILTERS -->
+      <div class="filters-panel">
+        <div class="filter-row">
+          <div class="filter-group">
+            <label class="filter-label">📂 Categoría</label>
+            <select id="fCategoria" class="filter-select">
+              <option value="">Todas las categorías</option>
+              <option value="Marco Legal y Normativo">Marco Legal y Normativo</option>
+              <option value="Constitución y Gobierno">Constitución y Gobierno</option>
+              <option value="Gestión de Proyectos y Fondos">Gestión de Proyectos y Fondos</option>
+              <option value="Recursos Humanos y Voluntariado">Recursos Humanos y Voluntariado</option>
+              <option value="Programas y Proyectos en Campo">Programas y Proyectos en Campo</option>
+              <option value="Conocimiento Institucional">Conocimiento Institucional</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">📄 Tipo de Documento</label>
+            <select id="fTipo" class="filter-select">
+              <option value="">Todos los tipos</option>
+              <option value="#ley">#ley</option>
+              <option value="#manual">#manual</option>
+              <option value="#plantilla">#plantilla</option>
+              <option value="#informe">#informe</option>
+              <option value="#caso-de-exito">#caso-de-exito</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">🏛 Entidad Reguladora</label>
+            <select id="fEntidad" class="filter-select">
+              <option value="">Todas las entidades</option>
+              <option value="APCI">APCI</option>
+              <option value="SUNAT">SUNAT</option>
+              <option value="SUNARP">SUNARP</option>
+              <option value="MEF">MEF</option>
+              <option value="MINJUSDH">MINJUSDH</option>
+              <option value="PCM">PCM</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">⚖️ Estado Legal</label>
+            <select id="fEstado" class="filter-select">
+              <option value="">Todos los estados</option>
+              <option value="#vigente">#vigente</option>
+              <option value="#derogado">#derogado</option>
+              <option value="#en-revision">#en-revision</option>
+            </select>
+          </div>
+        </div>
+        <div class="filter-row">
+          <div class="filter-group" style="flex:2;">
+            <label class="filter-label">🔍 Búsqueda de Texto</label>
+            <div style="display:flex;gap:8px;">
+              <input type="text" id="fTexto" class="filter-input" placeholder="Buscar en título y contenido..." oninput="liveSearch()" onkeydown="if(event.key==='Enter')liveSearch()" />
+              <button class="btn btn-secondary" onclick="liveSearch()">Buscar</button>
+              <button class="btn btn-outline" onclick="clearFilters()">Limpiar</button>
+            </div>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">📅 Desde</label>
+            <input type="date" id="fDesde" class="filter-input" value="2024-01-01" onchange="liveSearch()" />
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">📅 Hasta</label>
+            <input type="date" id="fHasta" class="filter-input" value="2026-12-31" onchange="liveSearch()" />
+          </div>
+        </div>
+      </div>
+
+      <!-- RESULTS -->
+      <div id="advResults" class="adv-results">
+        <p id="resultsCount" class="results-count"></p>
+        <div id="resultsList"></div>
+        <div id="noResults" class="no-results hidden">
+          <span class="no-results-icon">🔍</span>
+          <strong>Sin resultados</strong>
+          <p>Esta búsqueda se registra automáticamente en <code>Special:SearchStats</code> para análisis de brechas de conocimiento. El administrador recibirá una alerta y podrá crear el artículo correspondiente.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARCHITECTURE TABLE -->
+  <section class="content-section">
+    <div class="container">
+      <h2 class="section-title">5.2 Arquitectura del Motor de Búsqueda</h2>
+      <p class="section-sub">3 capas tecnológicas: Índice → Motor → Interfaz</p>
+      <div class="arch-layers">
+        <div class="arch-layer arch-layer-1">
+          <div class="arch-layer-label">Capa 1 — Índice</div>
+          <div class="arch-layer-content">
+            <h4>Elasticsearch 8.x + CirrusSearch</h4>
+            <p>Indexación de texto completo en tiempo real. Analiza morfología del español (lematización), detecta sinónimos legales y maneja caracteres especiales del quechua.</p>
+          </div>
+        </div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-layer arch-layer-2">
+          <div class="arch-layer-label">Capa 2 — Motor</div>
+          <div class="arch-layer-content">
+            <h4>MediaWiki Special:Search + API REST</h4>
+            <p>Procesa consultas con operadores avanzados (AND, OR, NOT, comillas para frases exactas). Soporta búsqueda por campo: <code>titulo:</code>, <code>categoria:</code>, <code>autor:</code>, <code>fecha:</code>.</p>
+          </div>
+        </div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-layer arch-layer-3">
+          <div class="arch-layer-label">Capa 3 — Interfaz</div>
+          <div class="arch-layer-content">
+            <h4>VisualSearch + Autocompletar AJAX</h4>
+            <p>Muestra sugerencias en tiempo real mientras el usuario escribe. Ofrece corrección ortográfica automática y búsqueda por similitud semántica.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FILTERS TABLE -->
+  <section class="content-section" style="background:#f8faff;">
+    <div class="container">
+      <h2 class="section-title">5.3 Filtros Avanzados de Búsqueda</h2>
+      <p class="section-sub">8 tipos de filtros combinables simultáneamente</p>
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Filtro</th>
+              <th>Valores Posibles</th>
+              <th>Ejemplo de Uso en la ONG</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td><strong>Por Categoría</strong></td>
+              <td>Selección múltiple de las 6 categorías principales</td>
+              <td>Buscar solo en 'Marco Legal' y 'Constitución y Gobierno' simultáneamente</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td><strong>Por Tipo de Documento</strong></td>
+              <td><span class="tag">#ley</span> <span class="tag">#manual</span> <span class="tag">#plantilla</span> <span class="tag">#informe</span></td>
+              <td>Encontrar solo plantillas de rendición de cuentas para donantes</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td><strong>Por Entidad Reguladora</strong></td>
+              <td><span class="tag">#APCI</span> <span class="tag">#SUNAT</span> <span class="tag">#SUNARP</span> <span class="tag">#MEF</span></td>
+              <td>Filtrar todas las normas emitidas por APCI en los últimos 2 años</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td><strong>Por Estado Legal</strong></td>
+              <td><span class="tag">#vigente</span> <span class="tag">#derogado</span> <span class="tag">#en-revision</span></td>
+              <td>Mostrar solo normas vigentes y excluir las derogadas automáticamente</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td><strong>Por Fecha de Publicación</strong></td>
+              <td>Rango de fechas con calendario (desde / hasta)</td>
+              <td>Normas actualizadas en el último trimestre para preparar informe anual</td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td><strong>Por Autor/Editor</strong></td>
+              <td>Usuario del wiki o nombre del organismo emisor</td>
+              <td>Artículos creados por el equipo legal para auditoría interna</td>
+            </tr>
+            <tr>
+              <td>7</td>
+              <td><strong>Por Etiqueta de Población</strong></td>
+              <td><span class="tag">#infancia</span> <span class="tag">#mujer</span> <span class="tag">#comunidad-rural</span></td>
+              <td>Todos los programas de intervención dirigidos a comunidades rurales</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td><strong>Por Fase de Proyecto</strong></td>
+              <td><span class="tag">#inicio</span> <span class="tag">#planificacion</span> <span class="tag">#cierre</span></td>
+              <td>Documentos útiles para la fase de cierre de un proyecto específico</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ANALYTICS SECTION -->
+  <section class="content-section">
+    <div class="container">
+      <h2 class="section-title">5.4 Registro de Búsquedas sin Éxito — Analítica de Brechas</h2>
+      <p class="section-sub">Funcionalidad diferenciadora: ciclo de mejora continua</p>
+      <div class="analytics-grid">
+        <div class="analytics-col">
+          <h3 class="card-title">📊 Mecanismo de Registro</h3>
+          <ul class="analytics-list">
+            <li>CirrusSearch registra automáticamente búsquedas con cero resultados</li>
+            <li>Los logs se almacenan en <code>Special:SearchStats</code></li>
+            <li>Se captura: término buscado, fecha, usuario (anonimizado), filtros usados</li>
+            <li>Panel administrativo muestra ranking semanal de búsquedas fallidas</li>
+            <li>Alertas automáticas si un término falla más de 10 veces</li>
+          </ul>
+        </div>
+        <div class="analytics-col">
+          <h3 class="card-title">🔄 Acciones de Mejora Continua</h3>
+          <ul class="analytics-list">
+            <li>Crear artículo nuevo si el tema no existe en el portal</li>
+            <li>Agregar sinónimos y redirecciones para términos populares</li>
+            <li>Revisar categorización de artículos existentes que no aparecen</li>
+            <li>Ciclo mensual de revisión con el equipo de GC</li>
+            <li>Reporte trimestral de brechas para la dirección de la ONG</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- MOCK ANALYTICS DASHBOARD -->
+      <div class="analytics-dashboard">
+        <h3 style="margin-bottom:16px;">📈 Dashboard de Búsquedas Fallidas (Simulado)</h3>
+        <div class="fail-bar-list" id="failBars"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TECH CONFIG -->
+  <section class="content-section" style="background:#1e293b;color:#e2e8f0;">
+    <div class="container">
+      <h2 class="section-title" style="color:#fff;">5.5 Configuración Técnica del Motor de Búsqueda</h2>
+      <p class="section-sub" style="color:#94a3b8;">Pasos de implementación</p>
+      <div class="tech-steps">
+        <div class="tech-step">
+          <span class="tech-num">1</span>
+          <div>
+            <strong>Elasticsearch 8.x</strong>
+            <p>Instalar en servidor de la ONG o instancia cloud (AWS/GCP free tier)</p>
+          </div>
+        </div>
+        <div class="tech-step">
+          <span class="tech-num">2</span>
+          <div>
+            <strong>Extension:CirrusSearch</strong>
+            <p>Configurar <code>LocalSettings.php</code> con parámetros de conexión a Elasticsearch</p>
+          </div>
+        </div>
+        <div class="tech-step">
+          <span class="tech-num">3</span>
+          <div>
+            <strong>Analizador Español (es_ES)</strong>
+            <p>Lematización correcta de términos legales peruanos</p>
+          </div>
+        </div>
+        <div class="tech-step">
+          <span class="tech-num">4</span>
+          <div>
+            <strong>Índice de Sugerencias</strong>
+            <p>Autocompletado funcionando en menos de 200ms</p>
+          </div>
+        </div>
+        <div class="tech-step">
+          <span class="tech-num">5</span>
+          <div>
+            <strong>Registro de Búsquedas Fallidas</strong>
+            <p><code>$wgCirrusSearchLogElasticRequests = true</code></p>
+          </div>
+        </div>
+        <div class="tech-step">
+          <span class="tech-num">6</span>
+          <div>
+            <strong>Extension:EventLogging</strong>
+            <p>Panel de analítica de búsquedas con métricas detalladas</p>
+          </div>
+        </div>
+        <div class="tech-step">
+          <span class="tech-num">7</span>
+          <div>
+            <strong>Peso de Campos</strong>
+            <p>Título ×3, Subtítulo ×2, Contenido ×1, Etiquetas ×1.5</p>
+          </div>
+        </div>
+        <div class="tech-step">
+          <span class="tech-num">8</span>
+          <div>
+            <strong>Reindexación Automática</strong>
+            <p>Cada 24 horas para que artículos nuevos aparezcan al día siguiente</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RUBRIC -->
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-col">
+        <strong>Fase 2 — Motor de Búsqueda</strong>
+        <p>CirrusSearch + Elasticsearch 8.x · &lt;200ms · 8 filtros · Analítica de brechas</p>
+      </div>
+      <div class="footer-col">
+        <strong>Tecnología</strong>
+        <p>Elasticsearch 8.x · CirrusSearch · Extension:EventLogging · AJAX Autocomplete</p>
+      </div>
+      <div class="footer-col">
+        <strong>Puntaje</strong>
+        <p>Dr. Ing. Julio Arboleda H. · Junio 2026</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Proyecto Final GC · UTP · Gestión del Conocimiento en ONGs y Proyectos de Desarrollo Social</p>
+    </div>
+  </footer>
+
+  <script src="../js/search.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    // ===== ADVANCED FILTER SEARCH =====
+    function liveSearch() {
+      const texto = document.getElementById('fTexto').value.toLowerCase();
+      const categoria = document.getElementById('fCategoria').value;
+      const tipo = document.getElementById('fTipo').value;
+      const entidad = document.getElementById('fEntidad').value;
+      const estado = document.getElementById('fEstado').value;
+      const desde = document.getElementById('fDesde').value;
+      const hasta = document.getElementById('fHasta').value;
+
+      let results = KNOWLEDGE_BASE.filter(item => {
+        if (texto && !item.title.toLowerCase().includes(texto) && !item.snippet.toLowerCase().includes(texto)) return false;
+        if (categoria && item.category !== categoria) return false;
+        if (tipo && !item.tags.includes(tipo)) return false;
+        if (entidad && !item.entidad.includes(entidad)) return false;
+        if (estado && !item.tags.includes(estado)) return false;
+        if (desde && item.fecha < desde) return false;
+        if (hasta && item.fecha > hasta) return false;
+        return true;
+      });
+
+      const count = document.getElementById('resultsCount');
+      const list = document.getElementById('resultsList');
+      const noRes = document.getElementById('noResults');
+
+      count.textContent = `${results.length} resultado(s) — ⚡ simulado <200ms`;
+
+      if (results.length === 0) {
+        list.innerHTML = '';
+        noRes.classList.remove('hidden');
+      } else {
+        noRes.classList.add('hidden');
+        list.innerHTML = results.map(item => `
+          <div class="result-item">
+            <div class="result-title">📄 ${item.title}</div>
+            <div class="result-snippet">${item.snippet}</div>
+            <div class="result-meta">
+              <span class="tag">📂 ${item.category}</span>
+              <span class="tag">🏛 ${item.entidad}</span>
+              ${item.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+              <span style="font-size:11px;color:#9ca3af;margin-left:auto;">📅 ${item.fecha}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function clearFilters() {
+      ['fTexto','fCategoria','fTipo','fEntidad','fEstado'].forEach(id => {
+        const el = document.getElementById(id);
+        el.value = '';
+      });
+      document.getElementById('fDesde').value = '2024-01-01';
+      document.getElementById('fHasta').value = '2026-12-31';
+      liveSearch();
+    }
+
+    // ===== FAIL BARS =====
+    const failData = [
+      { term: "formulario de donación", count: 23 },
+      { term: "protocolo COVID voluntarios", count: 18 },
+      { term: "modelo informe GIZ 2025", count: 15 },
+      { term: "política de viáticos", count: 12 },
+      { term: "reglamento disciplinario", count: 9 },
+      { term: "indicadores ODS 2030", count: 7 }
+    ];
+
+    function renderFailBars() {
+      const max = failData[0].count;
+      document.getElementById('failBars').innerHTML = failData.map(d => `
+        <div class="fail-bar-item">
+          <div class="fail-term">${d.term}</div>
+          <div class="fail-bar-track">
+            <div class="fail-bar-fill" style="width:${(d.count/max*100).toFixed(0)}%"></div>
+          </div>
+          <div class="fail-count">${d.count}x</div>
+        </div>
+      `).join('');
+    }
+
+    renderFailBars();
+    liveSearch();
+  </script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Constitución Legal de una ONG · Portal GC ONGs</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+  <style>
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 8px;
+    }
+    .step-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      transition: box-shadow 0.15s;
+    }
+    .step-card:hover { box-shadow: var(--shadow); }
+    .step-num-large {
+      font-size: 48px;
+      font-weight: 900;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .step-card h4 { font-size: 16px; font-weight: 700; }
+    .step-card p { font-size: 13px; color: var(--text-muted); }
+    .step-entidad { font-size: 12px; font-weight: 600; color: var(--primary); }
+    .timeline-line {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      overflow-x: auto;
+      padding: 24px 0;
+    }
+    .tl-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+      width: 110px;
+    }
+    .tl-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .tl-label { font-size: 11px; text-align: center; margin-top: 6px; color: var(--text-muted); line-height: 1.4; }
+    .tl-connector {
+      flex: 1;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      min-width: 24px;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-icon">🌐</span>
+        <div>
+          <span class="brand-title">Portal GC — ONGs Perú</span>
+          <span class="brand-sub">Gestión del Conocimiento · UTP Semana 11</span>
+        </div>
+      </div>
+      <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Inicio</a>
+        <a href="fase1.html" class="nav-link">Fase 1 — Taxonomía</a>
+        <a href="fase2.html" class="nav-link">Fase 2 — Búsqueda</a>
+        <a href="marco-legal.html" class="nav-link">Marco Legal</a>
+        <a href="constitucion.html" class="nav-link active">Constitución ONG</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page-header">
+    <div class="container">
+      <div class="breadcrumb"><a href="../index.html">Inicio</a> → <a href="marco-legal.html">Marco Legal</a> → Constitución</div>
+      <h1>🏢 Proceso de Constitución Legal de una ONG en el Perú</h1>
+      <p>Guía de 8 pasos para formalizar una Organización No Gubernamental. Conocimiento estructurado para nuevos voluntarios y directivos.</p>
+      <div class="page-score">
+        <span class="score-pill">8 pasos · Múltiples entidades</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <section class="content-section">
+    <div class="container">
+      <h2 class="section-title">Línea de Tiempo — Proceso de Constitución</h2>
+      <div class="timeline-line">
+        <div class="tl-node"><div class="tl-circle">1</div><div class="tl-label">Elaborar Estatutos</div></div>
+        <div class="tl-connector"></div>
+        <div class="tl-node"><div class="tl-circle">2</div><div class="tl-label">Minuta y Escritura Pública</div></div>
+        <div class="tl-connector"></div>
+        <div class="tl-node"><div class="tl-circle">3</div><div class="tl-label">Inscripción SUNARP</div></div>
+        <div class="tl-connector"></div>
+        <div class="tl-node"><div class="tl-circle">4</div><div class="tl-label">Obtener RUC</div></div>
+        <div class="tl-connector"></div>
+        <div class="tl-node"><div class="tl-circle">5</div><div class="tl-label">Registro APCI</div></div>
+        <div class="tl-connector"></div>
+        <div class="tl-node"><div class="tl-circle">6</div><div class="tl-label">Cuenta Bancaria</div></div>
+        <div class="tl-connector"></div>
+        <div class="tl-node"><div class="tl-circle">7</div><div class="tl-label">Registro Convenios</div></div>
+        <div class="tl-connector"></div>
+        <div class="tl-node"><div class="tl-circle" style="background:var(--secondary);">8</div><div class="tl-label">Informes Anuales</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEPS GRID -->
+  <section class="content-section" style="background:#f8faff;">
+    <div class="container">
+      <h2 class="section-title">Detalle de los 8 Pasos</h2>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num-large">01</div>
+          <h4>Elaborar Estatutos</h4>
+          <p>Redactar el documento fundacional que define la misión, visión, objetivos, estructura orgánica, patrimonio y normas de funcionamiento de la ONG.</p>
+          <span class="step-entidad">🏛 Notario Público</span>
+        </div>
+        <div class="step-card">
+          <div class="step-num-large">02</div>
+          <h4>Minuta y Escritura Pública</h4>
+          <p>Formalizar la constitución ante Notario Público con los estatutos aprobados por los miembros fundadores.</p>
+          <span class="step-entidad">🏛 Notario Público</span>
+        </div>
+        <div class="step-card">
+          <div class="step-num-large">03</div>
+          <h4>Inscripción en SUNARP</h4>
+          <p>Registrar la persona jurídica en la Superintendencia Nacional de Registros Públicos para obtener personería jurídica.</p>
+          <span class="step-entidad">🏛 SUNARP</span>
+        </div>
+        <div class="step-card">
+          <div class="step-num-large">04</div>
+          <h4>Obtener RUC</h4>
+          <p>Tramitar el Registro Único de Contribuyentes para identificación tributaria como entidad exonerada de impuesto a la renta (Art. 19 LIR).</p>
+          <span class="step-entidad">🏛 SUNAT</span>
+        </div>
+        <div class="step-card">
+          <div class="step-num-large">05</div>
+          <h4>Registro en APCI</h4>
+          <p>Inscribirse en la Agencia Peruana de Cooperación Internacional si se recibirán fondos de cooperación técnica internacional.</p>
+          <span class="step-entidad">🏛 APCI</span>
+        </div>
+        <div class="step-card">
+          <div class="step-num-large">06</div>
+          <h4>Apertura de Cuenta Bancaria</h4>
+          <p>Abrir cuenta corriente institucional a nombre de la ONG para gestión transparente de fondos.</p>
+          <span class="step-entidad">🏛 Banco seleccionado</span>
+        </div>
+        <div class="step-card">
+          <div class="step-num-large">07</div>
+          <h4>Registro de Convenios</h4>
+          <p>Registrar convenios con entidades financiadoras (USAID, UE, GIZ, etc.) ante APCI y MINJUSDH según corresponda.</p>
+          <span class="step-entidad">🏛 APCI / MINJUSDH</span>
+        </div>
+        <div class="step-card" style="border-color:var(--secondary);">
+          <div class="step-num-large">08</div>
+          <h4>Presentación de Informes Anuales</h4>
+          <p>Cumplir con la presentación de Informes de Actividades y Declaraciones Juradas anuales ante APCI. Obligación recurrente.</p>
+          <span class="step-entidad">🏛 APCI</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TABLE VERSION -->
+  <section class="content-section">
+    <div class="container">
+      <h2 class="section-title">Vista de Tabla — Proceso Completo</h2>
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Paso</th>
+              <th>Acción</th>
+              <th>Descripción</th>
+              <th>Entidad</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>1</strong></td><td>Elaborar Estatutos</td><td>Documento fundacional con misión, visión, objetivos, estructura orgánica y patrimonio.</td><td>Notario Público</td></tr>
+            <tr><td><strong>2</strong></td><td>Minuta y Escritura Pública</td><td>Formalización ante Notario Público con estatutos aprobados por los miembros fundadores.</td><td>Notario Público</td></tr>
+            <tr><td><strong>3</strong></td><td>Inscripción en SUNARP</td><td>Registro de la persona jurídica para obtener personería jurídica.</td><td>SUNARP</td></tr>
+            <tr><td><strong>4</strong></td><td>Obtener RUC</td><td>Identificación tributaria como entidad exonerada (Art. 19 LIR).</td><td>SUNAT</td></tr>
+            <tr><td><strong>5</strong></td><td>Registro en APCI</td><td>Obligatorio si se recibirán fondos de cooperación técnica internacional.</td><td>APCI</td></tr>
+            <tr><td><strong>6</strong></td><td>Apertura de cuenta bancaria</td><td>Cuenta corriente institucional para gestión transparente de fondos.</td><td>Banco seleccionado</td></tr>
+            <tr><td><strong>7</strong></td><td>Registro de Convenios</td><td>Registro de convenios con USAID, UE, GIZ, etc. ante APCI y MINJUSDH.</td><td>APCI / MINJUSDH</td></tr>
+            <tr><td><strong>8</strong></td><td>Presentación de informes anuales</td><td>Informes de Actividades y Declaraciones Juradas anuales ante APCI. Recurrente.</td><td>APCI</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-col"><strong>Constitución ONG</strong><p>8 pasos para formalizar una ONG en el Perú · Entidades: Notaría, SUNARP, SUNAT, APCI, MINJUSDH</p></div>
+      <div class="footer-col"><strong>Base Legal</strong><p>Ley 28882 · D.S. 015-92-PCM · Código Civil Libro I Sección II</p></div>
+      <div class="footer-col"><strong>Proyecto Final GC</strong><p>Dr. Ing. Julio Arboleda H. · UTP · Junio 2026</p></div>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Proyecto Final GC · UTP · Gestión del Conocimiento en ONGs y Proyectos de Desarrollo Social</p></div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>
