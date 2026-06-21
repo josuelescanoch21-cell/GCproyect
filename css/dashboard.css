@@ -521,3 +521,38 @@ body.menu-open .mobile-menu-btn span:nth-child(3){transform:translateY(-7px) rot
   .user-chip{width:100%;justify-content:flex-start;}
   .image-slot{min-height:150px;padding:18px;}
 }
+
+/* === Imágenes reales: sin borde punteado y ajustadas al panel === */
+.image-slot:has(img),
+.image-panel{
+  border:none!important;
+  background:transparent!important;
+  padding:0!important;
+  min-height:0!important;
+  height:clamp(240px, 34vw, 430px);
+  width:100%;
+  overflow:hidden;
+  border-radius:22px;
+  display:block;
+  margin:22px 0;
+  box-shadow:var(--shadow-sm);
+}
+
+.image-slot img,
+.banner-img,
+.panel-img{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;
+  object-position:center;
+  border-radius:inherit;
+}
+
+@media (max-width: 640px){
+  .image-slot:has(img),
+  .image-panel{
+    height:220px;
+    padding:0!important;
+  }
+}
