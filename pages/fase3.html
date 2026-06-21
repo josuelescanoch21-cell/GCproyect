@@ -369,6 +369,11 @@
 
 
 <script src="../js/main.js"></script>
+<script type="module">
+  import { supabase, SUPABASE_READY } from "../js/supabase-client.js";
+  window.GC_SUPABASE = supabase;
+  window.GC_SUPABASE_READY = SUPABASE_READY;
+</script>
 <script>
     // ─────────────────────────────────────────
     // BASE DE DATOS DE USUARIOS Y ROLES
@@ -674,24 +679,98 @@
     }
     }
 
-    function guardarArticulo(estado) {
+    async function guardarArticulo(estado) {
     const titulo = document.getElementById('artTitulo').value.trim();
     const cat    = document.getElementById('artCategoria').value;
+    const tagsRaw = document.getElementById('artTags').value.trim();
+    const contenido = document.getElementById('artContenido').value.trim();
+    const btnGuardar = document.getElementById('btnGuardarBorrador');
+    const btnPublicar = document.getElementById('btnPublicar');
+    const fb = document.getElementById('editorFeedback');
+
     if (!titulo || !cat) {
         alert('Por favor completa el título y la categoría.');
         return;
     }
-    const fb = document.getElementById('editorFeedback');
-    fb.className = 'editor-feedback ' + (estado === 'publicado' ? 'fb-ok' : 'fb-draft');
-    fb.textContent = estado === 'publicado'
-        ? `✅ Artículo "${titulo}" publicado correctamente.`
-        : `💾 Borrador "${titulo}" guardado. Puedes continuar editando.`;
+
+    if (!window.GC_SUPABASE_READY || !window.GC_SUPABASE) {
+        alert('Supabase todavía no está configurado o no cargó correctamente.');
+        return;
+    }
+
+    btnGuardar.disabled = true;
+    btnPublicar.disabled = true;
+    fb.className = 'editor-feedback fb-draft';
+    fb.textContent = '⏳ Guardando en Supabase...';
     fb.classList.remove('hidden');
-    addAuditEntry(currentUser.email,
+
+    try {
+        const supabase = window.GC_SUPABASE;
+
+        // Buscar el ID real de la categoría por nombre
+        const { data: categoria, error: catError } = await supabase
+        .from('categories')
+        .select('id')
+        .eq('name', cat)
+        .single();
+
+        if (catError) throw catError;
+
+        const tags = tagsRaw
+        ? tagsRaw.split(/[\s,]+/).map(t => t.trim()).filter(Boolean)
+        : [];
+
+        const snippet = contenido
+        ? contenido.replace(/[#*_`>-]/g, '').slice(0, 180)
+        : `Artículo creado desde el editor del portal: ${titulo}`;
+
+        const { data, error } = await supabase
+        .from('documents')
+        .insert({
+            title: titulo,
+            category_id: categoria?.id || null,
+            tipo: 'articulo',
+            entidad: 'Interno',
+            snippet,
+            content: contenido || null,
+            tags,
+            status: estado === 'publicado' ? 'vigente' : 'en-revision'
+        })
+        .select('id, title')
+        .single();
+
+        if (error) throw error;
+
+        // Registro inicial de versión para historial/auditoría
+        await supabase.from('document_versions').insert({
+        document_id: data.id,
+        title: titulo,
+        content: contenido || null
+        });
+
+        fb.className = 'editor-feedback ' + (estado === 'publicado' ? 'fb-ok' : 'fb-draft');
+        fb.textContent = estado === 'publicado'
+        ? `✅ Artículo "${titulo}" publicado y guardado en Supabase.`
+        : `💾 Borrador "${titulo}" guardado en Supabase.`;
+
+        addAuditEntry(currentUser.email,
         estado === 'publicado' ? 'PUBLICAR' : 'BORRADOR',
-        `Artículo "${titulo}" (${cat})`);
-    renderAuditoria();
-    setTimeout(() => fb.classList.add('hidden'), 4000);
+        `Artículo "${titulo}" (${cat}) guardado en Supabase. ID: ${data.id}`);
+        renderAuditoria();
+
+        document.getElementById('artTitulo').value = '';
+        document.getElementById('artTags').value = '';
+        document.getElementById('artContenido').value = '';
+        document.getElementById('artCategoria').value = '';
+    } catch (error) {
+        console.error('Error al guardar en Supabase:', error);
+        fb.className = 'editor-feedback fb-error';
+        fb.textContent = `❌ No se pudo guardar en Supabase: ${error.message}`;
+    } finally {
+        btnGuardar.disabled = false;
+        btnPublicar.disabled = false;
+        setTimeout(() => fb.classList.add('hidden'), 7000);
+    }
     }
 </script>
 </body>
