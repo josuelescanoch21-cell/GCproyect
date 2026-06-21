@@ -1,71 +1,70 @@
-import { SUPABASE_READY } from './supabase-client.js';
-import { signIn, signOut, getCurrentRole, createLaw, createLicense, getLaws, getLicenses } from './data.js';
+import { createLaw, createLicense, getLaws, getLicenses } from './data.js';
 
 const loginGate = document.getElementById('loginGate');
 const adminContent = document.getElementById('adminContent');
 const userChip = document.getElementById('userChip');
 
+function currentSession(){ return window.GCAuth ? window.GCAuth.getSession() : null; }
+function isAdmin(){ const s = currentSession(); return !!s && s.rol === 'admin'; }
+
 function notice(elId, message, ok = true) {
   const el = document.getElementById(elId);
+  if (!el) return;
   el.innerHTML = `<div class="notice ${ok ? 'ok' : 'err'}">${message}</div>`;
   setTimeout(() => { el.innerHTML = ''; }, 5000);
 }
 
-async function checkSession() {
-  if (!SUPABASE_READY) {
-    notice('loginNotice', 'Modo demo: Supabase no está conectado todavía. Revisa SUPABASE_SETUP.md para activar el guardado real.', false);
-    return;
-  }
-  const role = await getCurrentRole();
-  if (role && (role.role === 'admin' || role.role === 'editor')) {
-    showAdmin(role);
-  }
-}
-
-function showAdmin(role) {
+function showAdmin(session) {
   loginGate.classList.add('hidden');
   adminContent.classList.remove('hidden');
   userChip.style.display = 'flex';
-  document.getElementById('userName').textContent = role.full_name || 'Usuario';
-  document.getElementById('userRole').textContent = 'Rol: ' + role.role;
-  document.getElementById('userAvatar').textContent = (role.full_name || 'U')[0].toUpperCase();
+  document.getElementById('userName').textContent = session.nombre || 'Administrador';
+  document.getElementById('userRole').textContent = 'Rol: Administrador';
+  document.getElementById('userAvatar').textContent = session.avatar || 'A';
   refreshList();
 }
 
-document.getElementById('loginBtn').addEventListener('click', async () => {
-  const email = document.getElementById('loginEmail').value.trim();
-  const password = document.getElementById('loginPassword').value;
-  if (!SUPABASE_READY) { notice('loginNotice', 'Conecta Supabase primero (ver SUPABASE_SETUP.md).', false); return; }
-  try {
-    await signIn(email, password);
-    const role = await getCurrentRole();
-    if (!role || (role.role !== 'admin' && role.role !== 'editor')) {
-      notice('loginNotice', 'Tu cuenta no tiene permisos de Editor/Administrador.', false);
-      await signOut();
-      return;
-    }
-    showAdmin(role);
-  } catch (err) {
-    notice('loginNotice', 'Credenciales inválidas: ' + err.message, false);
-  }
-});
+function showRestricted() {
+  loginGate.classList.remove('hidden');
+  adminContent.classList.add('hidden');
+  userChip.style.display = 'none';
+  loginGate.innerHTML = `
+    <h3>Acceso administrativo</h3>
+    <p class="sub" style="margin-bottom:16px;">Este panel solo se habilita al iniciar sesión con una cuenta Administrador.</p>
+    <button class="btn-save" id="openAdminLogin">Iniciar sesión</button>
+  `;
+  document.getElementById('openAdminLogin').onclick = () => window.GCAuth?.openAuthModal();
+}
+
+function checkSession() {
+  const session = currentSession();
+  if (session?.rol === 'admin') showAdmin(session);
+  else showRestricted();
+}
 
 // ---- Tabs ----
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    document.getElementById('tabLeyes').classList.add('hidden');
-    document.getElementById('tabLicencias').classList.add('hidden');
-    document.getElementById('tabLista').classList.add('hidden');
+    ['tabLeyes','tabLicencias','tabLista'].forEach(id => document.getElementById(id).classList.add('hidden'));
     const map = { leyes: 'tabLeyes', licencias: 'tabLicencias', lista: 'tabLista' };
     document.getElementById(map[btn.dataset.tab]).classList.remove('hidden');
     if (btn.dataset.tab === 'lista') refreshList();
   });
 });
 
+function requireAdminAction(noticeId){
+  if (!isAdmin()) {
+    notice(noticeId, 'Necesitas iniciar sesión como Administrador para realizar esta acción.', false);
+    return false;
+  }
+  return true;
+}
+
 // ---- Guardar ley ----
 document.getElementById('lawSaveBtn').addEventListener('click', async () => {
+  if (!requireAdminAction('lawNotice')) return;
   const title = document.getElementById('lawTitle').value.trim();
   const snippet = document.getElementById('lawSnippet').value.trim();
   const entidad = document.getElementById('lawEntidad').value.trim();
@@ -84,6 +83,7 @@ document.getElementById('lawSaveBtn').addEventListener('click', async () => {
 
 // ---- Guardar licencia ----
 document.getElementById('licSaveBtn').addEventListener('click', async () => {
+  if (!requireAdminAction('licenseNotice')) return;
   const title = document.getElementById('licTitle').value.trim();
   const entidad = document.getElementById('licEntidad').value.trim();
   const venceEl = document.getElementById('licFecha').value;
@@ -102,6 +102,7 @@ document.getElementById('licSaveBtn').addEventListener('click', async () => {
 // ---- Lista de registrados ----
 async function refreshList() {
   const el = document.getElementById('adminList');
+  if (!el) return;
   const [laws, licenses] = await Promise.all([getLaws(), getLicenses()]);
   el.innerHTML = `
     <h4 style="font-size:13px;margin-bottom:8px;">Leyes (${laws.length})</h4>
@@ -111,4 +112,5 @@ async function refreshList() {
   `;
 }
 
-checkSession();
+document.addEventListener('DOMContentLoaded', checkSession);
+document.addEventListener('gc-auth-change', checkSession);

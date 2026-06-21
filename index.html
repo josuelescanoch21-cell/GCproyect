@@ -44,11 +44,11 @@
         <h2>Panel de Gestión del Conocimiento</h2>
         <p class="sub">Vista general · documentos, búsquedas y vencimientos en tiempo real</p>
       </div>
-      <div class="user-chip">
-        <div class="avatar">A</div>
+      <div class="user-chip" data-manage-only>
+        <div class="avatar">✓</div>
         <div>
-          <div style="font-size:13px;font-weight:600;">Admin Demo</div>
-          <div class="role">Rol: Administrador</div>
+          <div style="font-size:13px;font-weight:600;">Sesión activa</div>
+          <div class="role">Usuario autenticado</div>
         </div>
       </div>
     </div>
@@ -96,6 +96,14 @@
       <div id="searchResults" class="search-results"></div>
     </section>
 
+
+    <section class="image-slot" id="image-slot-home">
+      <div>
+        <strong>Espacio para imagen institucional</strong>
+        <span>Cuando tengas tu imagen, colócala en <code>assets/img/dashboard-banner.jpg</code> y reemplaza este bloque.</span>
+      </div>
+    </section>
+
     <!-- GRID: categories chart + alerts -->
     <section class="grid-2">
       <div class="card">
@@ -135,5 +143,6 @@
 </div>
 
 <script type="module" src="js/dashboard.js"></script>
+<script type="module" src="js/auth.js"></script>
 </body>
 </html>

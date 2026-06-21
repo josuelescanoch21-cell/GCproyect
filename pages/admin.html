@@ -60,22 +60,12 @@
 
     <!-- LOGIN GATE -->
     <div id="loginGate" class="card gate">
-      <h3>Iniciar sesión</h3>
-      <p class="sub" style="margin-bottom:16px;">Solo usuarios con rol Editor o Administrador pueden publicar contenido.</p>
-      <div id="loginNotice"></div>
-      <div class="form-group">
-        <label>Correo</label>
-        <input type="email" id="loginEmail" placeholder="admin@tuong.org" />
-      </div>
-      <div class="form-group">
-        <label>Contraseña</label>
-        <input type="password" id="loginPassword" placeholder="••••••••" />
-      </div>
-      <button class="btn-save" id="loginBtn">Ingresar</button>
-      <p style="font-size:12px;color:var(--muted);margin-top:14px;">
-        ¿Aún no conectaste Supabase? Revisa <code>SUPABASE_SETUP.md</code>. Sin conexión, este panel funciona en modo demo (no guarda datos reales).
-      </p>
+      <h3>Acceso administrativo</h3>
+      <p class="sub" style="margin-bottom:16px;">Este módulo solo se habilita al iniciar sesión como Administrador.</p>
+      <button class="btn-save" type="button" onclick="window.GCAuth?.openAuthModal()">Iniciar sesión</button>
     </div>
+
+    <section class="image-slot" id="admin-image-slot"><div><strong>Espacio para imagen del panel administrativo</strong><span>Luego puedes colocarla en <code>assets/img/admin-panel.jpg</code>.</span></div></section>
 
     <!-- ADMIN CONTENT (oculto hasta iniciar sesión) -->
     <div id="adminContent" class="hidden">
@@ -147,5 +137,6 @@
 </div>
 
 <script type="module" src="../js/admin.js"></script>
+<script type="module" src="../js/auth.js"></script>
 </body>
 </html>

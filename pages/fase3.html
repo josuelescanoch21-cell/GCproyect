@@ -54,7 +54,7 @@
     <div class="login-card">
         <div class="login-logo">🔐</div>
         <h2 class="login-title">Acceso al Portal GC</h2>
-        <p class="login-sub">Selecciona un rol para explorar las funciones disponibles</p>
+        <p class="login-sub">Inicia sesión para continuar. Tu usuario se mantendrá activo mientras navegas por el portal.</p>
 
         <div id="loginError" class="login-error hidden">
         ⚠️ Usuario o contraseña incorrectos
@@ -75,7 +75,7 @@
         <button class="btn-login" onclick="doLogin()">Iniciar sesión →</button>
 
         <!-- Credenciales demo -->
-        <div class="demo-creds">
+        <details class="demo-creds"><summary>Ver cuentas de ejemplo</summary>
         <p class="demo-title">👤 Credenciales de demostración</p>
         <div class="cred-list">
             <div class="cred-item cred-admin" onclick="fillCred('admin@ong.pe','admin123')">
@@ -91,7 +91,7 @@
             <span>lector@ong.pe · lector123</span>
             </div>
         </div>
-        </div>
+        </details>
     </div>
     </section>
 
@@ -334,40 +334,15 @@
 <!-- EXPLICACIÓN TÉCNICA -->
 <section class="content-section" style="margin-top:48px;">
     <div class="container">
-    <h2 class="section-title">⚙️ Arquitectura de Seguridad — RBAC</h2>
-    <div class="arch-layers">
-        <div class="arch-layer" style="border-left:4px solid #4f46e5;">
-        <div class="arch-layer-label">Capa 1 — Autenticación</div>
-        <div class="arch-layer-content">
-            <h4>Token de sesión + Hash de contraseña</h4>
-            <p>En producción: bcrypt para hashing de contraseñas, JWT firmado para tokens de sesión con expiración de 8 horas. Refresh token almacenado en cookie HttpOnly para prevenir XSS.</p>
-        </div>
-        </div>
-        <div class="arch-arrow">↓</div>
-        <div class="arch-layer" style="border-left:4px solid #0e9f6e;">
-        <div class="arch-layer-label">Capa 2 — Autorización RBAC</div>
-        <div class="arch-layer-content">
-            <h4>Control de Acceso Basado en Roles</h4>
-            <p>Cada ruta y acción verifica el rol del usuario antes de ejecutarse. Los permisos están definidos en una matriz centralizada: Administrador hereda todos los permisos de Editor y Lector.</p>
-        </div>
-        </div>
-        <div class="arch-arrow">↓</div>
-        <div class="arch-layer" style="border-left:4px solid #f59e0b;">
-        <div class="arch-layer-label">Capa 3 — Auditoría</div>
-        <div class="arch-layer-content">
-            <h4>Historial inmutable + Diff View</h4>
-            <p>Cada acción (crear, editar, eliminar, cambiar rol) queda registrada con timestamp, usuario, IP y detalle del cambio. El diff view muestra exactamente qué texto fue modificado entre versiones.</p>
-        </div>
-        </div>
-    </div>
-    </div>
-</section>
+    <section class="image-slot"><div><strong>Espacio para imagen del flujo de seguridad</strong><span>Coloca tu imagen en <code>assets/img/seguridad-rbac.jpg</code>.</span></div></section>
+
 
 <!-- FOOTER -->
   </main>
 </div>
 
 
+<script type="module" src="../js/auth.js"></script>
 <script src="../js/main.js"></script>
 <script type="module">
   import { supabase, SUPABASE_READY } from "../js/supabase-client.js";
@@ -451,18 +426,22 @@
     const u = document.getElementById('loginUser').value.trim();
     const p = document.getElementById('loginPass').value;
     const err = document.getElementById('loginError');
-    if (USERS[u] && USERS[u].pass === p) {
+    try {
+        const session = window.GCAuth ? window.GCAuth.signIn(u, p) : null;
+        const data = session || (USERS[u] && USERS[u].pass === p ? { email:u, ...USERS[u] } : null);
+        if (!data) throw new Error('Usuario o contraseña incorrectos');
         err.classList.add('hidden');
-        currentUser = { email: u, ...USERS[u] };
-        sessionStart = new Date();
+        currentUser = { email:data.email, nombre:data.nombre, rol:data.rol, avatar:data.avatar || '👤' };
+        sessionStart = new Date(data.loggedAt || Date.now());
         showDashboard();
-    } else {
+    } catch(e) {
         err.classList.remove('hidden');
     }
     }
 
     function doLogout() {
-    addAuditEntry(currentUser.email, 'CIERRE SESIÓN', 'Sesión cerrada correctamente');
+    if (currentUser) addAuditEntry(currentUser.email, 'CIERRE SESIÓN', 'Sesión cerrada correctamente');
+    if (window.GCAuth) { window.GCAuth.signOut(); return; }
     currentUser = null;
     document.getElementById('dashboardScreen').classList.add('hidden');
     document.getElementById('loginScreen').classList.remove('hidden');
@@ -772,6 +751,17 @@
         setTimeout(() => fb.classList.add('hidden'), 7000);
     }
     }
+
+    function iniciarDesdeSesionGlobal() {
+      const s = window.GCAuth ? window.GCAuth.getSession() : null;
+      if (s) {
+        currentUser = { email:s.email, nombre:s.nombre, rol:s.rol, avatar:s.avatar || '👤' };
+        sessionStart = new Date(s.loggedAt || Date.now());
+        showDashboard();
+      }
+    }
+    document.addEventListener('DOMContentLoaded', iniciarDesdeSesionGlobal);
 </script>
+
 </body>
 </html>

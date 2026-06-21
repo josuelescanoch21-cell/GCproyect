@@ -138,35 +138,8 @@
   <!-- ARCHITECTURE TABLE -->
   <section class="content-section">
     <div class="container">
-      <h2 class="section-title">5.2 Arquitectura del Motor de Búsqueda</h2>
-      <p class="section-sub">3 capas tecnológicas: Índice → Motor → Interfaz</p>
-      <div class="arch-layers">
-        <div class="arch-layer arch-layer-1">
-          <div class="arch-layer-label">Capa 1 — Índice</div>
-          <div class="arch-layer-content">
-            <h4>Elasticsearch 8.x + CirrusSearch</h4>
-            <p>Indexación de texto completo en tiempo real. Analiza morfología del español (lematización), detecta sinónimos legales y maneja caracteres especiales del quechua.</p>
-          </div>
-        </div>
-        <div class="arch-arrow">↓</div>
-        <div class="arch-layer arch-layer-2">
-          <div class="arch-layer-label">Capa 2 — Motor</div>
-          <div class="arch-layer-content">
-            <h4>MediaWiki Special:Search + API REST</h4>
-            <p>Procesa consultas con operadores avanzados (AND, OR, NOT, comillas para frases exactas). Soporta búsqueda por campo: <code>titulo:</code>, <code>categoria:</code>, <code>autor:</code>, <code>fecha:</code>.</p>
-          </div>
-        </div>
-        <div class="arch-arrow">↓</div>
-        <div class="arch-layer arch-layer-3">
-          <div class="arch-layer-label">Capa 3 — Interfaz</div>
-          <div class="arch-layer-content">
-            <h4>VisualSearch + Autocompletar AJAX</h4>
-            <p>Muestra sugerencias en tiempo real mientras el usuario escribe. Ofrece corrección ortográfica automática y búsqueda por similitud semántica.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+      <section class="image-slot"><div><strong>Espacio para imagen del buscador</strong><span>Coloca tu imagen en <code>assets/img/buscador-portal.jpg</code>.</span></div></section>
+
 
   <!-- FILTERS TABLE -->
   <section class="content-section" style="background:#f8faff;">
@@ -277,68 +250,7 @@
   <!-- TECH CONFIG -->
   <section class="content-section" style="background:#1e293b;color:#e2e8f0;">
     <div class="container">
-      <h2 class="section-title" style="color:#fff;">5.5 Configuración Técnica del Motor de Búsqueda</h2>
-      <p class="section-sub" style="color:#94a3b8;">Pasos de implementación</p>
-      <div class="tech-steps">
-        <div class="tech-step">
-          <span class="tech-num">1</span>
-          <div>
-            <strong>Elasticsearch 8.x</strong>
-            <p>Instalar en servidor de la ONG o instancia cloud (AWS/GCP free tier)</p>
-          </div>
-        </div>
-        <div class="tech-step">
-          <span class="tech-num">2</span>
-          <div>
-            <strong>Extension:CirrusSearch</strong>
-            <p>Configurar <code>LocalSettings.php</code> con parámetros de conexión a Elasticsearch</p>
-          </div>
-        </div>
-        <div class="tech-step">
-          <span class="tech-num">3</span>
-          <div>
-            <strong>Analizador Español (es_ES)</strong>
-            <p>Lematización correcta de términos legales peruanos</p>
-          </div>
-        </div>
-        <div class="tech-step">
-          <span class="tech-num">4</span>
-          <div>
-            <strong>Índice de Sugerencias</strong>
-            <p>Autocompletado funcionando en menos de 200ms</p>
-          </div>
-        </div>
-        <div class="tech-step">
-          <span class="tech-num">5</span>
-          <div>
-            <strong>Registro de Búsquedas Fallidas</strong>
-            <p><code>$wgCirrusSearchLogElasticRequests = true</code></p>
-          </div>
-        </div>
-        <div class="tech-step">
-          <span class="tech-num">6</span>
-          <div>
-            <strong>Extension:EventLogging</strong>
-            <p>Panel de analítica de búsquedas con métricas detalladas</p>
-          </div>
-        </div>
-        <div class="tech-step">
-          <span class="tech-num">7</span>
-          <div>
-            <strong>Peso de Campos</strong>
-            <p>Título ×3, Subtítulo ×2, Contenido ×1, Etiquetas ×1.5</p>
-          </div>
-        </div>
-        <div class="tech-step">
-          <span class="tech-num">8</span>
-          <div>
-            <strong>Reindexación Automática</strong>
-            <p>Cada 24 horas para que artículos nuevos aparezcan al día siguiente</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+      
 
   <!-- RUBRIC -->
   <!-- FOOTER -->
@@ -432,5 +344,6 @@
     renderFailBars();
     liveSearch();
   </script>
+<script type="module" src="../js/auth.js"></script>
 </body>
 </html>

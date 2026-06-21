@@ -1,15 +1,37 @@
--- Ejecuta este archivo UNA VEZ en Supabase > SQL Editor
--- Permite que el editor simulado del frontend guarde artículos sin Supabase Auth.
--- Úsalo para entrega/demo académica. En producción, reemplázalo por login real con Supabase Auth.
+-- Permisos de demostración para que el frontend pueda guardar datos desde Railway.
+-- Ejecutar en Supabase → SQL Editor.
 
-create policy if not exists "Demo permite crear documentos" on documents
-  for insert
-  with check (true);
+-- Evita recursión infinita en profiles causada por una policy que consulta profiles dentro de profiles.
+DROP POLICY IF EXISTS "Admin ve todos los perfiles" ON profiles;
+DROP POLICY IF EXISTS "Demo leer perfiles" ON profiles;
+CREATE POLICY "Demo leer perfiles"
+ON profiles
+FOR SELECT
+USING (true);
 
-create policy if not exists "Demo permite crear versiones" on document_versions
-  for insert
-  with check (true);
+ALTER TABLE documents ENABLE ROW LEVEL SECURITY;
+ALTER TABLE document_versions ENABLE ROW LEVEL SECURITY;
 
-create policy if not exists "Lectura pública de versiones" on document_versions
-  for select
-  using (true);
+DROP POLICY IF EXISTS "Demo permite crear documentos" ON documents;
+CREATE POLICY "Demo permite crear documentos"
+ON documents
+FOR INSERT
+WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Demo permite leer documentos" ON documents;
+CREATE POLICY "Demo permite leer documentos"
+ON documents
+FOR SELECT
+USING (true);
+
+DROP POLICY IF EXISTS "Demo permite crear versiones" ON document_versions;
+CREATE POLICY "Demo permite crear versiones"
+ON document_versions
+FOR INSERT
+WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Lectura publica de versiones" ON document_versions;
+CREATE POLICY "Lectura publica de versiones"
+ON document_versions
+FOR SELECT
+USING (true);
