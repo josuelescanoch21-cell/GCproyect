@@ -93,7 +93,7 @@ async function init(){
 
   document.getElementById('createOpportunityForm').onsubmit = async e => {
     e.preventDefault();
-    if(!canCreate()){ notify('Necesitas rol Representante ONG o Administrador para crear voluntariados.', false); return; }
+    if(!canCreate()){ notify('Necesitas rol Creador ONG o Administrador para crear voluntariados.', false); return; }
     const imageFile = document.getElementById('opImage')?.files?.[0] || null;
 
     const payload = {

@@ -2,11 +2,11 @@ import { supabase, SUPABASE_READY } from './supabase-client.js';
 
 // ---- Fallback local (se usa solo si Supabase no está configurado aún) ----
 const FALLBACK_DOCS = [
-  { id: 1, title: "Ley N° 28882 — Ley de las ONG", entidad: "APCI", snippet: "Regula la constitución, registro y supervisión de las ONG.", tags: ["#ley","#vigente","#APCI"], status: "vigente", categories: { name: "Normativa Legal", icon: "DOC" } },
-  { id: 2, title: "Guía de Inscripción APCI", entidad: "APCI", snippet: "Proceso completo de inscripción ante la APCI.", tags: ["#manual","#APCI"], status: "vigente", categories: { name: "Normativa Legal", icon: "DOC" } },
-  { id: 3, title: "Manual del Voluntario", entidad: "RRHH Interno", snippet: "Guía de inducción para nuevos voluntarios.", tags: ["#manual","#interno"], status: "vigente", categories: { name: "RRHH y Voluntariado", icon: "VOL" } },
-  { id: 4, title: "Ley N° 29733 — Protección de Datos", entidad: "MINJUSDH", snippet: "Obligaciones sobre datos de beneficiarios y donantes.", tags: ["#ley","#vigente"], status: "vigente", categories: { name: "Normativa Legal", icon: "DOC" } },
-  { id: 5, title: "Informe Anual APCI 2025", entidad: "APCI", snippet: "Informe anual de actividades ante la APCI.", tags: ["#informe"], status: "en-revision", categories: { name: "Normativa Legal", icon: "DOC" } },
+  { id: 1, title: "Ley N° 28882 — Ley de las ONG", entidad: "APCI", snippet: "Regula la constitución, registro y supervisión de las ONG.", tags: ["#ley","#vigente","#APCI"], status: "vigente", created_by_email: "editor@ong.pe", categories: { name: "Normativa Legal", icon: "DOC" } },
+  { id: 2, title: "Guía de Inscripción APCI", entidad: "APCI", snippet: "Proceso completo de inscripción ante la APCI.", tags: ["#manual","#APCI"], status: "vigente", created_by_email: "editor@ong.pe", categories: { name: "Normativa Legal", icon: "DOC" } },
+  { id: 3, title: "Manual del Voluntario", entidad: "RRHH Interno", snippet: "Guía de inducción para nuevos voluntarios.", tags: ["#manual","#interno"], status: "vigente", created_by_email: "editor@ong.pe", categories: { name: "RRHH y Voluntariado", icon: "VOL" } },
+  { id: 4, title: "Ley N° 29733 — Protección de Datos", entidad: "MINJUSDH", snippet: "Obligaciones sobre datos de beneficiarios y donantes.", tags: ["#ley","#vigente"], status: "vigente", created_by_email: "admin@ong.pe", categories: { name: "Normativa Legal", icon: "DOC" } },
+  { id: 5, title: "Informe Anual APCI 2025", entidad: "APCI", snippet: "Informe anual de actividades ante la APCI.", tags: ["#informe"], status: "en-revision", created_by_email: "editor@ong.pe", categories: { name: "Normativa Legal", icon: "DOC" } },
 ];
 
 const FALLBACK_CATEGORIES = [
@@ -22,10 +22,17 @@ export async function getDocuments() {
   if (!SUPABASE_READY) return FALLBACK_DOCS;
   const { data, error } = await supabase
     .from('documents')
-    .select('id, title, entidad, snippet, tags, status, vence_el, categories ( name, icon )')
+    .select('id, title, entidad, snippet, tags, status, vence_el, tipo, created_by_email, categories ( name, icon )')
     .order('created_at', { ascending: false });
   if (error) { console.warn('Supabase error, usando datos locales:', error.message); return FALLBACK_DOCS; }
   return data;
+}
+
+export async function getMyDocuments(session) {
+  const docs = await getDocuments();
+  if (!session) return [];
+  if (session.rol === 'admin') return docs;
+  return docs.filter(d => (d.created_by_email || '').toLowerCase() === session.email.toLowerCase());
 }
 
 export async function getCategories() {
@@ -70,13 +77,14 @@ export async function getAlerts() {
 }
 
 // ---------------------------------------------------------------
-// PANEL ADMIN — escritura de datos (requiere sesión con rol representante ONG/admin)
+// PANEL ADMIN — escritura de datos (requiere sesión con rol Creador ONG/admin)
 // ---------------------------------------------------------------
 
 // Registra una ley nueva o una modificación de ley vigente.
 // Aparece en el buscador con vista rápida (snippet) + enlace a la norma completa.
 export async function createLaw({ title, snippet, entidad, categoryId, linkExterno, tags }) {
   if (!SUPABASE_READY) throw new Error('Conecta Supabase primero (ver SUPABASE_SETUP.md).');
+  const session = currentLocalSession();
   const { data: userData } = await supabase.auth.getUser();
   const { data, error } = await supabase.from('documents').insert({
     title,
@@ -88,6 +96,7 @@ export async function createLaw({ title, snippet, entidad, categoryId, linkExter
     tags: tags || [],
     status: 'vigente',
     created_by: userData?.user?.id || null,
+    created_by_email: session?.email || null,
   }).select();
   if (error) throw error;
   return data;
@@ -96,6 +105,7 @@ export async function createLaw({ title, snippet, entidad, categoryId, linkExter
 // Registra una licencia, permiso o trámite de la ONG que está por vencer.
 export async function createLicense({ title, entidad, venceEl, snippet }) {
   if (!SUPABASE_READY) throw new Error('Conecta Supabase primero (ver SUPABASE_SETUP.md).');
+  const session = currentLocalSession();
   const { data: userData } = await supabase.auth.getUser();
   const { data, error } = await supabase.from('documents').insert({
     title,
@@ -105,6 +115,7 @@ export async function createLicense({ title, entidad, venceEl, snippet }) {
     status: 'en-revision',
     vence_el: venceEl,
     created_by: userData?.user?.id || null,
+    created_by_email: session?.email || null,
   }).select();
   if (error) throw error;
   return data;
@@ -158,7 +169,11 @@ function getLocal(key, fallback){
   try { return JSON.parse(localStorage.getItem(key) || 'null') || fallback; } catch { return fallback; }
 }
 function setLocal(key, value){ localStorage.setItem(key, JSON.stringify(value)); }
-function currentLocalSession(){ try { return JSON.parse(localStorage.getItem('gc_portal_session_v2') || 'null'); } catch { return null; } }
+function currentLocalSession(){
+  try {
+    return JSON.parse(localStorage.getItem('gestionaong_session_v3') || localStorage.getItem('gc_portal_session_v2') || 'null');
+  } catch { return null; }
+}
 
 export async function logProcess(action, role, detail = {}) {
   const session = currentLocalSession();
@@ -205,13 +220,13 @@ export async function createVolunteerOpportunity(payload) {
   const item = { ...payload, created_by_email: session?.email || null };
   if (SUPABASE_READY) {
     const { data, error } = await supabase.from('volunteer_opportunities').insert(item).select().single();
-    if (!error) { await logProcess('representante ONG_crea_voluntariado', session?.rol, { opportunity_id: data.id, title: data.title }); return data; }
+    if (!error) { await logProcess('creador_ONG_crea_voluntariado', session?.rol, { opportunity_id: data.id, title: data.title }); return data; }
     throw error;
   }
   const rows = await getVolunteerOpportunities();
   const created = { id: Date.now(), created_at: new Date().toISOString(), ...item };
   rows.unshift(created); setLocal(LOCAL_VOLUNTEERS_KEY, rows);
-  await logProcess('representante ONG_crea_voluntariado', session?.rol, { opportunity_id: created.id, title: created.title });
+  await logProcess('creador_ONG_crea_voluntariado', session?.rol, { opportunity_id: created.id, title: created.title });
   return created;
 }
 

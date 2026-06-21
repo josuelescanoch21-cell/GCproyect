@@ -13,7 +13,7 @@ alter table if exists documents add column if not exists tipo text not null defa
 alter table if exists documents add column if not exists link_externo text;
 
 -- 1. ROLES Y PERMISOS ------------------------------------------------
-create type user_role as enum ('admin', 'representante ONG', 'voluntario');
+create type user_role as enum ('admin', 'creador ONG', 'voluntario');
 
 create table if not exists profiles (
   id          uuid primary key references auth.users(id) on delete cascade,
@@ -69,6 +69,7 @@ create table if not exists documents (
 create index if not exists idx_documents_title_trgm on documents using gin (title gin_trgm_ops);
 create index if not exists idx_documents_snippet_trgm on documents using gin (snippet gin_trgm_ops);
 create index if not exists idx_documents_tags on documents using gin (tags);
+create index if not exists idx_documents_created_by_email on documents (created_by_email);
 
 -- 4. HISTORIAL DE VERSIONES (control de cambios y auditoría) --------
 create table if not exists document_versions (
@@ -139,14 +140,14 @@ create policy "Lectura pública de documentos" on documents
 create policy "Lectura pública de categorías" on categories
   for select using (true);
 
--- Solo representante ONGes y admin pueden crear/editar documentos
-create policy "Representante ONGes y admin escriben documentos" on documents
+-- Solo creadores ONG y admin pueden crear/editar documentos
+create policy "Creador ONGes y admin escriben documentos" on documents
   for insert with check (
-    exists (select 1 from profiles p where p.id = auth.uid() and p.role in ('representante ONG','admin'))
+    exists (select 1 from profiles p where p.id = auth.uid() and p.role in ('creador ONG','admin'))
   );
-create policy "Representante ONGes y admin actualizan documentos" on documents
+create policy "Creador ONGes y admin actualizan documentos" on documents
   for update using (
-    exists (select 1 from profiles p where p.id = auth.uid() and p.role in ('representante ONG','admin'))
+    exists (select 1 from profiles p where p.id = auth.uid() and p.role in ('creador ONG','admin'))
   );
 
 -- Solo admin puede borrar

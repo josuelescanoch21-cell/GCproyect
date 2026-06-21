@@ -20,7 +20,7 @@ function getSession(){ return JSON.parse(localStorage.getItem(GC_AUTH_SESSION_KE
 function setSession(session){ localStorage.setItem(GC_AUTH_SESSION_KEY, JSON.stringify(session)); }
 function clearSession(){ localStorage.removeItem(GC_AUTH_SESSION_KEY); }
 function pagePrefix(){ return location.pathname.includes('/pages/') ? '../' : ''; }
-function roleLabel(role){ return ({admin:'Administrador', editor:'Representante de ONG', lector:'Voluntario'}[role] || 'Usuario'); }
+function roleLabel(role){ return ({admin:'Administrador', editor:'Creador ONG', lector:'Voluntario'}[role] || 'Usuario'); }
 function canManage(){ const s = getSession(); return !!s && ['admin','editor'].includes(s.rol); }
 function isAdmin(){ const s = getSession(); return !!s && s.rol === 'admin'; }
 
@@ -60,7 +60,7 @@ function renderAuthModal(){
           <button type="submit">Entrar</button>
           <details class="gc-demo-box"><summary>Cuentas de ejemplo</summary>
             <button type="button" data-demo="admin@ong.pe|admin123">Administrador</button>
-            <button type="button" data-demo="editor@ong.pe|editor123">Representante ONG</button>
+            <button type="button" data-demo="editor@ong.pe|editor123">Creador ONG</button>
             <button type="button" data-demo="lector@ong.pe|lector123">Voluntario</button>
           </details>
         </form>

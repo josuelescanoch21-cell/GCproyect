@@ -1,6 +1,6 @@
 
 -- Extensión funcional para voluntariados, auditoría y control documental.
--- Ejecutar en Supabase > SQL Representante ONG si tu base ya estaba creada.
+-- Ejecutar en Supabase > SQL Creador ONG si tu base ya estaba creada.
 
 create table if not exists volunteer_opportunities (
   id bigint generated always as identity primary key,
