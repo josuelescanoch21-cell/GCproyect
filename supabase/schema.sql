@@ -209,3 +209,6 @@ insert into documents (title, category_id, entidad, snippet, tags, status, vence
     'Convenio de cooperación con GIZ pendiente de renovación.',
     array['#convenio','#en-revision'], 'en-revision', current_date + 45)
 on conflict do nothing;
+
+
+-- Nota: para voluntariados y auditoría ejecuta también supabase/voluntariados_auditoria.sql
