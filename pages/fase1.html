@@ -1,25 +1,654 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Guía de Trámites · GestionaONG</title><link rel="stylesheet" href="../css/dashboard.css"></head><body><div class="dash-shell"><aside class="sidebar">
-  <div class="sidebar-brand"><div class="logo">GO</div><div><h1>GestionaONG</h1><span>Gestión de ONG</span></div></div>
-  <nav class="side-nav">
-    <span class="nav-label">Principal</span>
-    <a href="../index.html" class="side-link">Inicio</a>
-    <a href="fase1.html" class="side-link active">Guía de Trámites</a>
-    <a href="fase2.html" class="side-link ">Biblioteca Legal</a>
-    <a href="fase3.html" class="side-link ">Permisos del Sistema</a>
-    <a href="admin.html" class="side-link ">Administración</a>
-    <span class="nav-label">Servicios</span>
-    <a href="marco-legal.html" class="side-link ">Normativa Legal</a>
-    <a href="constitucion.html" class="side-link ">Crear ONG</a>
-    <a href="voluntariados.html" class="side-link ">Voluntariados</a>
-    <a href="documentos-ong.html" class="side-link " data-manage-only>Mis Documentos</a>
-  </nav>
-  <div class="sidebar-footer">GestionaONG · Plataforma de gestión</div>
-</aside><main class="main">
-<div class="topbar"><div><h2>Guía de Trámites para ONG</h2><p class="sub">Organiza los pasos principales para crear, gestionar y mantener una ONG correctamente.</p></div></div>
-<section class="image-slot"><div><strong>Imagen de guía o asesoría</strong><span>Coloca tu imagen en <code>assets/img/guia-tramites.jpg</code>.</span></div></section>
-<section class="grid-2">
-  <article class="card"><h3>Crear una ONG</h3><p>Revisa los pasos necesarios para constituir la organización, preparar estatutos, definir representantes y registrar la entidad.</p><a class="btn-link" href="constitucion.html">Ver proceso</a></article>
-  <article class="card"><h3>Documentos obligatorios</h3><p>Consulta los permisos, constancias y documentos que deben mantenerse actualizados para operar sin inconvenientes.</p><a class="btn-link" href="documentos-ong.html">Ver documentos</a></article>
-</section>
-<section class="card" style="margin-top:20px"><h3>Áreas principales</h3><div class="service-grid"><div><strong>Legal</strong><p>Constitución, estatutos, inscripción y normativa.</p></div><div><strong>Gestión</strong><p>Representantes, archivo documental y seguimiento.</p></div><div><strong>Voluntariado</strong><p>Creación de oportunidades y control de postulantes.</p></div><div><strong>Renovaciones</strong><p>Alertas para documentos vigentes, por renovar o vencidos.</p></div></div></section>
-</main></div><script type="module" src="../js/auth.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guía Legal para Crear una ONG · GestionaONG</title>
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <link rel="stylesheet" href="../css/fase1.css" />
+</head>
+<body>
+<div class="dash-shell">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><div class="logo">GO</div><div><h1>GestionaONG</h1><span>Gestión de ONG</span></div></div>
+    <nav class="side-nav">
+      <span class="nav-label">Principal</span>
+      <a href="../index.html" class="side-link">Inicio</a>
+      <a href="fase1.html" class="side-link active">Guía Legal</a>
+      <a href="fase2.html" class="side-link">Biblioteca Legal</a>
+      <a href="fase3.html" class="side-link">Permisos del Sistema</a>
+      <a href="admin.html" class="side-link">Administración</a>
+      <span class="nav-label">Servicios</span>
+      <a href="marco-legal.html" class="side-link">Normativa Legal</a>
+      <a href="constitucion.html" class="side-link">Crear ONG</a>
+      <a href="voluntariados.html" class="side-link">Voluntariados</a>
+      <a href="documentos-ong.html" class="side-link" data-manage-only>Mis Documentos</a>
+    </nav>
+    <div class="sidebar-footer">GestionaONG · Plataforma de gestión</div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h2>Guía Legal para Crear una ONG</h2>
+        <p class="sub">Consulta las leyes, requisitos, definiciones y enlaces oficiales necesarios para constituir y administrar una ONG en Perú.</p>
+      </div>
+    </div>
+
+    <section class="legal-hero-card">
+      <div>
+        <span class="eyebrow">Ruta de orientación legal</span>
+        <h3>Encuentra cada requisito por etapa</h3>
+        <p>El árbol conserva la información legal original del proyecto: categoría, subcategoría, documento, definición, entidad responsable, estado y enlace para ampliar información.</p>
+      </div>
+      <div class="legal-hero-stats">
+        <div><strong>6</strong><span>áreas legales</span></div>
+        <div><strong>50+</strong><span>documentos guía</span></div>
+        <div><strong>Oficial</strong><span>enlaces de consulta</span></div>
+      </div>
+    </section>
+
+    <section class="content-section taxonomy-section">
+      <div class="section-head-clean">
+        <div>
+          <h3>Árbol de requisitos y leyes</h3>
+          <p>Expande una categoría y selecciona un documento para ver su definición y enlace de consulta.</p>
+        </div>
+      </div>
+      <div class="taxonomy-tree" id="taxonomyTree"></div>
+    </section>
+  </main>
+</div>
+
+<div id="leyModal" class="modal-overlay" onclick="closeModal(event)">
+  <div class="modal-panel">
+    <button class="modal-close" onclick="closeModalBtn()">×</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+    // =====================================================
+    // BASE DE DATOS DE LEYES — 1 objeto por artículo
+    // Cada artículo tiene: resumen, entidad, estado y url
+    // =====================================================
+    const LEYES_DB = {
+
+      // ── MARCO LEGAL Y NORMATIVO ──────────────────────
+
+      "Guía Ley N° 28882": {
+        titulo: "Ley N° 28882 — Organizaciones No Gubernamentales",
+        entidad: "APCI", estado: "vigente",
+        resumen: "Regula la constitución, registro obligatorio, funcionamiento y supervisión de las ONGs que reciben cooperación técnica internacional en el Perú. Establece la obligación de inscribirse ante la APCI y presentar informes anuales de actividades y recursos recibidos.",
+        proceso: "Registro y constitución de ONG",
+        url: "https://www.apci.gob.pe/index.php/marco-legal/leyes"
+      },
+      "Guía Ley N° 29733": {
+        titulo: "Ley N° 29733 — Protección de Datos Personales",
+        entidad: "MINJUSDH", estado: "vigente",
+        resumen: "Obliga a la ONG a gestionar con seguridad los datos de beneficiarios, voluntarios y donantes. Requiere consentimiento expreso para recopilar información y establece el derecho de los titulares a conocer, actualizar y suprimir sus datos.",
+        proceso: "Gestión de datos y privacidad",
+        url: "https://www.minjus.gob.pe/privacidad/"
+      },
+      "Guía Ley N° 27806": {
+        titulo: "Ley N° 27806 — Transparencia y Acceso a la Información",
+        entidad: "PCM", estado: "vigente",
+        resumen: "Las ONGs que reciben fondos públicos están obligadas a publicar información sobre el uso de esos recursos. Garantiza el derecho ciudadano de acceder a la información sin necesidad de justificar el pedido.",
+        proceso: "Transparencia institucional",
+        url: "https://www.gob.pe/institucion/pcm/normas-legales/292544-27806"
+      },
+      "D.S. 015-92-PCM": {
+        titulo: "D.S. N° 015-92-PCM — Reglamento de ONGs",
+        entidad: "PCM / APCI", estado: "vigente",
+        resumen: "Reglamento que desarrolla el marco operativo de las ONGs: define categorías, obligaciones de reporte ante la APCI, condiciones para convenios de cooperación y sanciones por incumplimiento.",
+        proceso: "Operación y cumplimiento normativo",
+        url: "https://www.apci.gob.pe/index.php/marco-legal/decretos-supremos"
+      },
+      "Resoluciones Directorales APCI": {
+        titulo: "Resoluciones Directorales — APCI",
+        entidad: "APCI", estado: "vigente",
+        resumen: "Conjunto de resoluciones administrativas que actualizan los procedimientos de inscripción, renovación y reporte de las ONGs ante la Agencia Peruana de Cooperación Internacional. Se emiten periódicamente.",
+        proceso: "Trámites ante APCI",
+        url: "https://www.apci.gob.pe/index.php/marco-legal/resoluciones-directorales"
+      },
+      "Guía Informe Anual": {
+        titulo: "Guía para el Informe Anual APCI",
+        entidad: "APCI", estado: "vigente",
+        resumen: "Instrucción oficial que detalla la estructura, plazos y documentos requeridos para la presentación del Informe Anual de Actividades y Recursos que toda ONG registrada debe entregar ante la APCI antes del 31 de marzo.",
+        proceso: "Reporte anual obligatorio",
+        url: "https://www.apci.gob.pe"
+      },
+      "Exoneración SUNAT Art. 19 LIR": {
+        titulo: "Art. 19° LIR — Exoneración del Impuesto a la Renta",
+        entidad: "SUNAT", estado: "vigente",
+        resumen: "Las ONGs sin fines de lucro están exoneradas del Impuesto a la Renta siempre que sus ingresos se destinen exclusivamente a sus fines institucionales y no se distribuyan entre sus miembros. Deben acreditar anualmente esta condición ante SUNAT.",
+        proceso: "Beneficios tributarios",
+        url: "https://www.sunat.gob.pe/legislacion/renta/ley/fueraduplicado/capiv/art19.pdf"
+      },
+      "Guía RUC ONG": {
+        titulo: "Obtención de RUC para Asociaciones sin Fines de Lucro",
+        entidad: "SUNAT", estado: "vigente",
+        resumen: "Procedimiento para inscribir la ONG en el Registro Único de Contribuyentes (RUC). Requiere escritura pública, partida registral de SUNARP y datos del representante legal. El RUC es obligatorio para firmar contratos y recibir transferencias bancarias.",
+        proceso: "Constitución legal",
+        url: "https://www.sunat.gob.pe/orientacion/index.html"
+      },
+      "Declaración Jurada Anual": {
+        titulo: "Declaración Jurada Anual — ONGs Exoneradas",
+        entidad: "SUNAT", estado: "vigente",
+        resumen: "Aun estando exoneradas del IR, las ONGs deben presentar anualmente la Declaración Jurada indicando sus ingresos, gastos y la naturaleza de sus actividades. El incumplimiento puede derivar en la pérdida de la exoneración tributaria.",
+        proceso: "Obligaciones tributarias anuales",
+        url: "https://www.sunat.gob.pe"
+      },
+      "Modelo Convenio USAID": {
+        titulo: "Modelo de Convenio de Cooperación — USAID",
+        entidad: "APCI / USAID", estado: "vigente",
+        resumen: "Formato estándar de convenio entre una ONG peruana y USAID. Establece objetivos del proyecto, montos transferidos, cronograma de desembolsos, obligaciones de reporte financiero y mecanismos de auditoría externa.",
+        proceso: "Cooperación internacional",
+        url: "https://www.apci.gob.pe/index.php/cooperacion-no-reembolsable"
+      },
+      "Modelo Convenio UE": {
+        titulo: "Modelo de Convenio de Cooperación — Unión Europea",
+        entidad: "APCI / UE", estado: "vigente",
+        resumen: "Acuerdo tipo para ONGs que reciben financiamiento de la Unión Europea. Incluye cláusulas sobre visibilidad del donante, auditorías independientes, informe narrativo semestral y condiciones de cierre del proyecto.",
+        proceso: "Cooperación internacional",
+        url: "https://www.apci.gob.pe"
+      },
+      "Formato Informe GIZ": {
+        titulo: "Formato de Informe para Proyectos GIZ",
+        entidad: "GIZ / APCI", estado: "vigente",
+        resumen: "Plantilla oficial de la Cooperación Alemana (GIZ) para el reporte de avance de proyectos. Incluye secciones de indicadores de resultado, gastos ejecutados, lecciones aprendidas y plan de acción del siguiente periodo.",
+        proceso: "Cooperación internacional",
+        url: "https://www.giz.de/en/worldwide/33041.html"
+      },
+
+      // ── CONSTITUCIÓN Y GOBIERNO ──────────────────────
+
+      "Modelo de Estatutos": {
+        titulo: "Modelo de Estatutos para ONG — Plantilla Notarial",
+        entidad: "SUNARP", estado: "vigente",
+        resumen: "Documento fundacional que define la misión, visión, objetivos, estructura orgánica, patrimonio y normas de funcionamiento de la asociación. Debe ser elaborado ante notario público e inscrito en SUNARP para obtener personería jurídica.",
+        proceso: "Constitución legal de la ONG",
+        url: "https://www.sunarp.gob.pe/seccion/sede/AyudaAsociaciones.html"
+      },
+      "Guía de Reforma Estatutaria": {
+        titulo: "Guía para la Reforma de Estatutos",
+        entidad: "SUNARP", estado: "vigente",
+        resumen: "Procedimiento para modificar los estatutos de una ONG ya constituida. Requiere convocatoria y quórum especial de la Asamblea General, escritura pública de la reforma y nueva inscripción en SUNARP.",
+        proceso: "Modificación de estatutos",
+        url: "https://www.sunarp.gob.pe"
+      },
+      "Checklist Estatutos SUNARP": {
+        titulo: "Checklist de Requisitos — Inscripción en SUNARP",
+        entidad: "SUNARP", estado: "vigente",
+        resumen: "Lista de verificación de los documentos necesarios para inscribir una asociación sin fines de lucro: minuta de constitución, escritura pública, DNI del representante legal, comprobante de domicilio y pago de tasa registral.",
+        proceso: "Constitución legal de la ONG",
+        url: "https://www.sunarp.gob.pe/PREG/inicio.aspx"
+      },
+      "Formato Acta Ordinaria": {
+        titulo: "Formato de Acta de Asamblea General Ordinaria",
+        entidad: "Interno", estado: "vigente",
+        resumen: "Plantilla para registrar las sesiones anuales obligatorias de la Asamblea General donde se aprueban el balance, la memoria anual, el presupuesto del siguiente período y la elección de directivos si corresponde.",
+        proceso: "Gobierno institucional",
+        url: "https://www.minjus.gob.pe"
+      },
+      "Formato Acta Extraordinaria": {
+        titulo: "Formato de Acta de Asamblea General Extraordinaria",
+        entidad: "Interno", estado: "vigente",
+        resumen: "Plantilla para sesiones convocadas fuera del calendario ordinario, generalmente para tratar reformas estatutarias, disolución de la organización, elecciones anticipadas o decisiones urgentes que no pueden esperar a la asamblea anual.",
+        proceso: "Gobierno institucional",
+        url: "https://www.minjus.gob.pe"
+      },
+      "Libro de Actas Digital": {
+        titulo: "Guía — Libro de Actas Digital para ONGs",
+        entidad: "SUNARP", estado: "vigente",
+        resumen: "SUNARP permite el registro de actas en formato digital legalizado. La guía explica cómo llevar el libro de actas electrónico, los requisitos de firma digital de los directivos y el archivo seguro de la documentación.",
+        proceso: "Gestión documental",
+        url: "https://www.sunarp.gob.pe"
+      },
+      "Manual del Directorio": {
+        titulo: "Manual del Directorio — Funciones y Responsabilidades",
+        entidad: "Interno", estado: "vigente",
+        resumen: "Documento que define las atribuciones, responsabilidades legales y límites de autoridad de cada miembro de la junta directiva: presidente, secretario, tesorero y vocales. Incluye el calendario de sesiones y el quórum requerido.",
+        proceso: "Gobierno institucional",
+        url: "https://www.minjus.gob.pe"
+      },
+      "Código de Conducta": {
+        titulo: "Código de Conducta Institucional",
+        entidad: "Interno", estado: "vigente",
+        resumen: "Establece los principios éticos y normas de comportamiento que deben observar todos los miembros, directivos y voluntarios de la ONG. Incluye política de conflicto de intereses, uso de recursos institucionales y mecanismos de denuncia.",
+        proceso: "Gobierno institucional",
+        url: "https://www.minjus.gob.pe"
+      },
+      "Reglamento de Sesiones": {
+        titulo: "Reglamento de Sesiones de la Junta Directiva",
+        entidad: "Interno", estado: "vigente",
+        resumen: "Norma interna que regula la frecuencia, convocatoria, quórum, orden del día y toma de decisiones en las sesiones de la Junta Directiva. Define también los mecanismos de votación y el tratamiento de temas urgentes.",
+        proceso: "Gobierno institucional",
+        url: "https://www.minjus.gob.pe"
+      },
+
+      // ── GESTIÓN DE PROYECTOS Y FONDOS ────────────────
+
+      "Marco Lógico": {
+        titulo: "Marco Lógico — Herramienta de Planificación de Proyectos",
+        entidad: "Interno", estado: "vigente",
+        resumen: "Matriz de planificación que organiza el objetivo general, objetivos específicos, resultados esperados, actividades e indicadores verificables del proyecto. Es el documento base exigido por la mayoría de donantes internacionales para aprobar financiamiento.",
+        proceso: "Planificación de proyectos",
+        url: "https://www.apci.gob.pe"
+      },
+      "Plan de Trabajo": {
+        titulo: "Plantilla — Plan de Trabajo Anual",
+        entidad: "Interno", estado: "vigente",
+        resumen: "Documento operativo que detalla las actividades del proyecto mes a mes, los responsables de cada tarea, los recursos necesarios y los entregables esperados. Se deriva del Marco Lógico y sirve de guía al equipo de campo.",
+        proceso: "Ejecución de proyectos",
+        url: "https://www.apci.gob.pe"
+      },
+      "Cronograma Gantt": {
+        titulo: "Plantilla de Cronograma Gantt para Proyectos",
+        entidad: "Interno", estado: "vigente",
+        resumen: "Herramienta visual de programación que muestra las actividades del proyecto en una línea de tiempo. Permite identificar dependencias entre tareas, hitos críticos y el avance real versus lo planificado.",
+        proceso: "Planificación y seguimiento",
+        url: "https://www.apci.gob.pe"
+      },
+      "Plantilla Presupuesto": {
+        titulo: "Plantilla de Presupuesto para Proyectos de Cooperación",
+        entidad: "Interno", estado: "vigente",
+        resumen: "Formato estructurado para elaborar el presupuesto de un proyecto: líneas de gasto, costos unitarios, fuentes de financiamiento (donante vs. contrapartida local) y cronograma de desembolsos.",
+        proceso: "Gestión financiera",
+        url: "https://www.apci.gob.pe"
+      },
+      "Guía de Costeo": {
+        titulo: "Guía de Costeo para ONGs",
+        entidad: "MEF / APCI", estado: "vigente",
+        resumen: "Metodología para calcular costos directos e indirectos de los proyectos. Explica cómo distribuir los gastos administrativos entre proyectos y cómo calcular tasas overhead aceptadas por los principales donantes internacionales.",
+        proceso: "Gestión financiera",
+        url: "https://www.mef.gob.pe"
+      },
+      "Control Presupuestal": {
+        titulo: "Herramienta de Control Presupuestal",
+        entidad: "Interno", estado: "vigente",
+        resumen: "Hoja de seguimiento que compara mensualmente lo presupuestado versus lo ejecutado en cada línea de gasto. Permite detectar desviaciones a tiempo y solicitar al donante modificaciones presupuestales cuando sea necesario.",
+        proceso: "Seguimiento financiero",
+        url: "https://www.apci.gob.pe"
+      },
+      "Formato Rendición USAID": {
+        titulo: "Formato de Rendición de Cuentas — USAID",
+        entidad: "USAID / APCI", estado: "vigente",
+        resumen: "Documento de reporte financiero exigido por USAID cada trimestre. Incluye cuadros de gastos por categoría presupuestal, justificantes de gasto, proyección del período siguiente y variaciones respecto al presupuesto aprobado.",
+        proceso: "Rendición de cuentas",
+        url: "https://www.apci.gob.pe/index.php/cooperacion-no-reembolsable"
+      },
+      "Informe Financiero Trimestral": {
+        titulo: "Plantilla — Informe Financiero Trimestral",
+        entidad: "Interno", estado: "vigente",
+        resumen: "Estado financiero de uso interno que resume los ingresos, egresos y saldo disponible del trimestre por proyecto y fuente de financiamiento. Alimenta la toma de decisiones de la Junta Directiva.",
+        proceso: "Rendición de cuentas",
+        url: "https://www.apci.gob.pe"
+      },
+      "Auditoría Interna": {
+        titulo: "Guía de Auditoría Interna para ONGs",
+        entidad: "MEF / APCI", estado: "vigente",
+        resumen: "Procedimiento para realizar auditorías periódicas que verifican el uso correcto de los fondos del proyecto. Incluye revisión de comprobantes, contratos, planillas y cumplimiento de los procedimientos de adquisición del donante.",
+        proceso: "Control y auditoría",
+        url: "https://www.contraloria.gob.pe"
+      },
+
+      // ── RECURSOS HUMANOS Y VOLUNTARIADO ─────────────
+
+      "Protocolo de Selección": {
+        titulo: "Protocolo de Selección de Voluntarios",
+        entidad: "Interno", estado: "vigente",
+        resumen: "Define el proceso de reclutamiento: publicación de convocatoria, revisión de postulaciones, entrevista, verificación de antecedentes (obligatoria para proyectos con niños) y comunicación del resultado. Garantiza transparencia e igualdad de oportunidades.",
+        proceso: "Gestión de voluntariado",
+        url: "https://www.mimp.gob.pe"
+      },
+      "Formulario de Inscripción": {
+        titulo: "Formulario de Inscripción de Voluntario",
+        entidad: "Interno", estado: "vigente",
+        resumen: "Documento que recopila los datos personales, habilidades, disponibilidad horaria y motivación del postulante. Incluye la autorización para el tratamiento de datos personales según la Ley N° 29733.",
+        proceso: "Gestión de voluntariado",
+        url: "https://www.mimp.gob.pe"
+      },
+      "Entrevista de Ingreso": {
+        titulo: "Guía de Entrevista de Ingreso para Voluntarios",
+        entidad: "Interno", estado: "vigente",
+        resumen: "Estructura de entrevista para evaluar la idoneidad del postulante: preguntas sobre motivación, experiencia previa, disponibilidad y alineación con los valores institucionales. Incluye rúbrica de evaluación del entrevistador.",
+        proceso: "Gestión de voluntariado",
+        url: "https://www.mimp.gob.pe"
+      },
+      "Manual del Voluntario": {
+        titulo: "Manual del Voluntario — Inducción y Protocolo",
+        entidad: "Interno", estado: "vigente",
+        resumen: "Guía completa para nuevos voluntarios: misión y visión de la ONG, código de conducta, estructura organizacional, derechos y deberes del voluntario, protocolos de seguridad en campo y contactos de emergencia.",
+        proceso: "Inducción de voluntarios",
+        url: "https://www.mimp.gob.pe/voluntariado"
+      },
+      "Protocolo de Inducción": {
+        titulo: "Protocolo de Inducción Institucional",
+        entidad: "Interno", estado: "vigente",
+        resumen: "Plan estructurado de las primeras dos semanas del voluntario: sesión de bienvenida, visita a campo, reuniones con el equipo, lectura del manual y evaluación inicial de comprensión. Asegura una integración efectiva.",
+        proceso: "Inducción de voluntarios",
+        url: "https://www.mimp.gob.pe"
+      },
+      "Presentación Institucional": {
+        titulo: "Presentación Institucional para Nuevos Miembros",
+        entidad: "Interno", estado: "vigente",
+        resumen: "Diapositivas de bienvenida que resumen la historia de la ONG, proyectos activos, estructura del equipo, logros principales y planes estratégicos. Se entrega a todo nuevo voluntario, colaborador o visitante institucional.",
+        proceso: "Inducción de voluntarios",
+        url: "https://www.mimp.gob.pe"
+      },
+      "Plan Anual de Capacitación": {
+        titulo: "Plan Anual de Capacitación de Voluntarios",
+        entidad: "Interno", estado: "vigente",
+        resumen: "Programa de formación continua para voluntarios: talleres técnicos, cursos de habilidades blandas, visitas de intercambio y certificaciones. Se diseña cada año en función de las necesidades detectadas en la evaluación de desempeño.",
+        proceso: "Desarrollo de voluntarios",
+        url: "https://www.mimp.gob.pe"
+      },
+      "Registro de Asistencia": {
+        titulo: "Plantilla — Registro de Asistencia a Capacitaciones",
+        entidad: "Interno", estado: "vigente",
+        resumen: "Formato para documentar la participación de voluntarios en actividades de formación. Incluye fecha, tema, facilitador, lista de asistentes con firma y porcentaje de asistencia. Exigido por algunos donantes para justificar gastos de capacitación.",
+        proceso: "Desarrollo de voluntarios",
+        url: "https://www.mimp.gob.pe"
+      },
+      "Evaluación Post-Formación": {
+        titulo: "Instrumento de Evaluación Post-Formación",
+        entidad: "Interno", estado: "vigente",
+        resumen: "Encuesta aplicada al finalizar cada capacitación para medir la satisfacción, la utilidad percibida y el nivel de aprendizaje de los participantes. Los resultados alimentan la mejora del plan de capacitación del siguiente ciclo.",
+        proceso: "Desarrollo de voluntarios",
+        url: "https://www.mimp.gob.pe"
+      },
+
+      // ── PROGRAMAS Y PROYECTOS EN CAMPO ──────────────
+
+      "Ficha de Proyecto Educativo": {
+        titulo: "Ficha de Proyecto — Área Educativa",
+        entidad: "MINEDU", estado: "vigente",
+        resumen: "Formato de formulación de proyectos educativos que incluye diagnóstico del problema, población objetivo, objetivos de aprendizaje, metodología pedagógica, presupuesto y sistema de monitoreo alineado con los indicadores del MINEDU.",
+        proceso: "Formulación de proyectos",
+        url: "https://www.minedu.gob.pe"
+      },
+      "Línea Base Educativa": {
+        titulo: "Guía para el Levantamiento de Línea Base Educativa",
+        entidad: "MINEDU", estado: "vigente",
+        resumen: "Metodología para medir el estado inicial de los indicadores educativos antes de iniciar el proyecto. Define instrumentos de recopilación de datos (encuestas, pruebas diagnósticas), tamaño de muestra y análisis estadístico básico.",
+        proceso: "Monitoreo y evaluación",
+        url: "https://www.minedu.gob.pe"
+      },
+      "Indicadores UNESCO": {
+        titulo: "Marco de Indicadores UNESCO para Proyectos Educativos",
+        entidad: "UNESCO / MINEDU", estado: "vigente",
+        resumen: "Conjunto de indicadores internacionales para medir el impacto de proyectos educativos: tasa de asistencia, nivel de aprendizaje, permanencia escolar y equidad de género. Su uso facilita la presentación de resultados ante donantes internacionales.",
+        proceso: "Monitoreo y evaluación",
+        url: "https://es.unesco.org/themes/education"
+      },
+      "Protocolo de Intervención Salud": {
+        titulo: "Protocolo de Intervención en Salud Comunitaria",
+        entidad: "MINSA", estado: "vigente",
+        resumen: "Guía operativa para proyectos de salud: coordinación con establecimientos del MINSA, perfil mínimo del personal de salud, normas de bioseguridad, derivación de casos y registro de atenciones en el sistema HIS-MINSA.",
+        proceso: "Ejecución de proyectos de salud",
+        url: "https://www.gob.pe/minsa"
+      },
+      "Ficha Epidemiológica": {
+        titulo: "Ficha Epidemiológica — CDC Perú",
+        entidad: "MINSA / CDC", estado: "vigente",
+        resumen: "Instrumento del Centro Nacional de Epidemiología del MINSA para el registro y notificación de casos de enfermedades. Las ONGs que trabajan en salud deben usar este formato y reportar al sistema de vigilancia epidemiológica nacional.",
+        proceso: "Vigilancia epidemiológica",
+        url: "https://www.dge.gob.pe"
+      },
+      "Indicadores OMS": {
+        titulo: "Indicadores OMS para Proyectos de Salud",
+        entidad: "OMS / MINSA", estado: "vigente",
+        resumen: "Sistema de métricas de la Organización Mundial de la Salud para evaluar el impacto de intervenciones en salud: mortalidad infantil, cobertura de vacunación, desnutrición crónica y acceso a agua segura. Estándar aceptado por cooperantes internacionales.",
+        proceso: "Monitoreo y evaluación",
+        url: "https://www.who.int/es/data/gho/indicator-metadata-registry"
+      },
+      "Marco de Género": {
+        titulo: "Marco de Género para Proyectos de Inclusión Social",
+        entidad: "MIMP", estado: "vigente",
+        resumen: "Enfoque transversal que garantiza que el proyecto identifique y reduzca brechas entre hombres y mujeres. Define indicadores desagregados por sexo, estrategias de participación equitativa y medidas de protección para mujeres en situación de vulnerabilidad.",
+        proceso: "Diseño inclusivo de proyectos",
+        url: "https://www.mimp.gob.pe/webs/mimp/sispod/index.php"
+      },
+      "Protocolo Anti-discriminación": {
+        titulo: "Protocolo Anti-discriminación e Inclusión",
+        entidad: "MIMP / CONADIS", estado: "vigente",
+        resumen: "Establece las medidas que debe adoptar la ONG para garantizar la no discriminación por razón de género, etnia, discapacidad o condición socioeconómica en la selección de beneficiarios, el trato del personal y la comunicación institucional.",
+        proceso: "Protección y salvaguardas",
+        url: "https://www.conadis.gob.pe"
+      },
+      "Indicadores ODS 10": {
+        titulo: "Indicadores ODS 10 — Reducción de Desigualdades",
+        entidad: "ONU / CEPLAN", estado: "vigente",
+        resumen: "Métricas del Objetivo de Desarrollo Sostenible 10 para medir la reducción de desigualdades en los proyectos: índice de Gini, ingresos del 40% más pobre, acceso a servicios por grupos vulnerables. CEPLAN Perú los incorpora al sistema de planificación nacional.",
+        proceso: "Monitoreo y evaluación",
+        url: "https://www.ceplan.gob.pe/documentos_/agenda-2030/"
+      },
+
+      // ── CONOCIMIENTO INSTITUCIONAL ───────────────────
+
+      "Cronología Institucional": {
+        titulo: "Cronología Institucional — Historia de la ONG",
+        entidad: "Interno", estado: "vigente",
+        resumen: "Línea de tiempo documentada de los hitos más importantes de la organización: fundación, primeros proyectos, reconocimientos, expansión geográfica y cambios de liderazgo. Es un recurso de memoria institucional clave para la identidad organizacional.",
+        proceso: "Gestión del conocimiento institucional",
+        url: "#"
+      },
+      "Hitos del Proyecto": {
+        titulo: "Registro de Hitos por Proyecto",
+        entidad: "Interno", estado: "vigente",
+        resumen: "Documento que captura los logros más significativos de cada proyecto ejecutado: número de beneficiarios, resultados medibles, reconocimientos recibidos y lecciones aprendidas. Sirve como evidencia para nuevas solicitudes de financiamiento.",
+        proceso: "Gestión del conocimiento institucional",
+        url: "#"
+      },
+      "Galería de Evidencias": {
+        titulo: "Galería de Evidencias — Fotos y Testimonios",
+        entidad: "Interno", estado: "vigente",
+        resumen: "Repositorio fotográfico y de testimonios de beneficiarios que documenta visualmente el impacto de los proyectos. Debe cumplir con la política de protección de datos e imagen de beneficiarios, especialmente de menores de edad.",
+        proceso: "Comunicación y visibilidad",
+        url: "#"
+      },
+      "Caso Huancavelica 2024": {
+        titulo: "Caso de Éxito — Programa Educativo Huancavelica 2024",
+        entidad: "Interno", estado: "vigente",
+        resumen: "Sistematización del programa que benefició a 1,200 niños en zonas rurales de Huancavelica. Documenta el modelo de intervención, los resultados de aprendizaje obtenidos, los factores de éxito y las recomendaciones para replicar la experiencia.",
+        proceso: "Aprendizaje organizacional",
+        url: "#"
+      },
+      "Caso Selva Central 2023": {
+        titulo: "Caso de Éxito — Proyecto Agroforestal Selva Central 2023",
+        entidad: "Interno", estado: "vigente",
+        resumen: "Documentación del proyecto agroforestal en comunidades nativas de la Selva Central. Incluye el proceso de consulta previa, los acuerdos con las comunidades, los resultados ambientales medidos y el modelo de gestión comunitaria implementado.",
+        proceso: "Aprendizaje organizacional",
+        url: "#"
+      },
+      "Plantilla Sistematización": {
+        titulo: "Plantilla para Sistematización de Experiencias",
+        entidad: "Interno", estado: "vigente",
+        resumen: "Formato estructurado para documentar y analizar la experiencia de un proyecto: contexto, proceso de implementación, resultados, lecciones aprendidas y recomendaciones. Basado en la metodología de Oscar Jara para la sistematización de experiencias.",
+        proceso: "Aprendizaje organizacional",
+        url: "#"
+      },
+      "Repositorio de Informes": {
+        titulo: "Repositorio Institucional de Informes",
+        entidad: "Interno", estado: "vigente",
+        resumen: "Biblioteca digital de todos los informes finales de proyectos, auditorías, evaluaciones externas y memorias anuales de la ONG. Organizado por año, proyecto y tipo de documento para facilitar la consulta interna y la rendición de cuentas.",
+        proceso: "Gestión documental",
+        url: "#"
+      },
+      "Artículos Académicos": {
+        titulo: "Artículos Académicos Producidos por la ONG",
+        entidad: "Interno", estado: "vigente",
+        resumen: "Publicaciones científicas y técnicas elaboradas por el equipo de la ONG a partir de las experiencias de campo. Se publican en revistas especializadas y repositorios abiertos para contribuir al conocimiento del sector.",
+        proceso: "Producción de conocimiento",
+        url: "#"
+      },
+      "Boletines Trimestrales": {
+        titulo: "Boletines Trimestrales Institucionales",
+        entidad: "Interno", estado: "vigente",
+        resumen: "Publicación periódica que comunica a donantes, aliados y comunidad los avances de los proyectos, noticias institucionales y convocatorias abiertas. Se distribuye por correo electrónico y se publica en el sitio web de la ONG.",
+        proceso: "Comunicación institucional",
+        url: "#"
+      }
+    };
+
+    // =====================================================
+    // ÁRBOL DE TAXONOMÍA — estructura de categorías
+    // =====================================================
+    const TAXONOMY = [
+      {
+        icon: "📋", name: "Marco Legal y Normativo",
+        subs: [
+          { name: "Leyes Nacionales", articles: ["Guía Ley N° 28882", "Guía Ley N° 29733", "Guía Ley N° 27806"] },
+          { name: "Reglamentos APCI", articles: ["D.S. 015-92-PCM", "Resoluciones Directorales APCI", "Guía Informe Anual"] },
+          { name: "Normas Tributarias", articles: ["Exoneración SUNAT Art. 19 LIR", "Guía RUC ONG", "Declaración Jurada Anual"] },
+          { name: "Convenios Internacionales", articles: ["Modelo Convenio USAID", "Modelo Convenio UE", "Formato Informe GIZ"] }
+        ]
+      },
+      {
+        icon: "🏢", name: "Constitución y Gobierno",
+        subs: [
+          { name: "Estatutos", articles: ["Modelo de Estatutos", "Guía de Reforma Estatutaria", "Checklist Estatutos SUNARP"] },
+          { name: "Actas de Asamblea", articles: ["Formato Acta Ordinaria", "Formato Acta Extraordinaria", "Libro de Actas Digital"] },
+          { name: "Junta Directiva", articles: ["Manual del Directorio", "Código de Conducta", "Reglamento de Sesiones"] }
+        ]
+      },
+      {
+        icon: "💰", name: "Gestión de Proyectos y Fondos",
+        subs: [
+          { name: "Ciclo de Proyecto", articles: ["Marco Lógico", "Plan de Trabajo", "Cronograma Gantt"] },
+          { name: "Presupuestos", articles: ["Plantilla Presupuesto", "Guía de Costeo", "Control Presupuestal"] },
+          { name: "Rendición de Cuentas", articles: ["Formato Rendición USAID", "Informe Financiero Trimestral", "Auditoría Interna"] }
+        ]
+      },
+      {
+        icon: "👥", name: "Recursos Humanos y Voluntariado",
+        subs: [
+          { name: "Reclutamiento", articles: ["Protocolo de Selección", "Formulario de Inscripción", "Entrevista de Ingreso"] },
+          { name: "Inducción", articles: ["Manual del Voluntario", "Protocolo de Inducción", "Presentación Institucional"] },
+          { name: "Capacitación", articles: ["Plan Anual de Capacitación", "Registro de Asistencia", "Evaluación Post-Formación"] }
+        ]
+      },
+      {
+        icon: "🎯", name: "Programas y Proyectos en Campo",
+        subs: [
+          { name: "Educación", articles: ["Ficha de Proyecto Educativo", "Línea Base Educativa", "Indicadores UNESCO"] },
+          { name: "Salud", articles: ["Protocolo de Intervención Salud", "Ficha Epidemiológica", "Indicadores OMS"] },
+          { name: "Inclusión Social", articles: ["Marco de Género", "Protocolo Anti-discriminación", "Indicadores ODS 10"] }
+        ]
+      },
+      {
+        icon: "📊", name: "Conocimiento Institucional",
+        subs: [
+          { name: "Historia y Cronología", articles: ["Cronología Institucional", "Hitos del Proyecto", "Galería de Evidencias"] },
+          { name: "Casos de Éxito", articles: ["Caso Huancavelica 2024", "Caso Selva Central 2023", "Plantilla Sistematización"] },
+          { name: "Publicaciones", articles: ["Repositorio de Informes", "Artículos Académicos", "Boletines Trimestrales"] }
+        ]
+      }
+    ];
+
+    // =====================================================
+    // RENDER DEL ÁRBOL
+    // =====================================================
+    function renderTree() {
+      const tree = document.getElementById('taxonomyTree');
+      tree.innerHTML = TAXONOMY.map((cat, ci) => `
+        <div class="tree-category">
+          <div class="tree-cat-header" onclick="toggleCat(${ci})">
+            <span class="tree-icon">${cat.icon}</span>
+            <strong>${cat.name}</strong>
+            <span class="tree-toggle" id="toggle-${ci}">▼</span>
+          </div>
+          <div class="tree-subs" id="subs-${ci}">
+            ${cat.subs.map((sub, si) => `
+              <div class="tree-sub">
+                <div class="tree-sub-header" onclick="toggleSub(${ci},${si})">
+                  📁 ${sub.name}
+                  <span class="tree-toggle" id="stoggle-${ci}-${si}">▼</span>
+                </div>
+                <div class="tree-articles" id="arts-${ci}-${si}">
+                  ${sub.articles.map(a => `
+                    <div class="tree-article tree-article-link" onclick="openModal('${a.replace(/'/g, "\\'")}')">
+                      📄 ${a}
+                      <span class="article-arrow">›</span>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleCat(ci) {
+      const el = document.getElementById(`subs-${ci}`);
+      const tog = document.getElementById(`toggle-${ci}`);
+      const hidden = el.style.display === 'none';
+      el.style.display = hidden ? 'block' : 'none';
+      tog.textContent = hidden ? '▼' : '▶';
+    }
+
+    function toggleSub(ci, si) {
+      const el = document.getElementById(`arts-${ci}-${si}`);
+      const tog = document.getElementById(`stoggle-${ci}-${si}`);
+      const hidden = el.style.display === 'none';
+      el.style.display = hidden ? 'block' : 'none';
+      tog.textContent = hidden ? '▼' : '▶';
+    }
+
+    // =====================================================
+    // MODAL
+    // =====================================================
+    function openModal(key) {
+      const ley = LEYES_DB[key];
+      if (!ley) return;
+
+      const estadoColor = ley.estado === 'vigente' ? '#065f46' : '#991b1b';
+      const estadoBg   = ley.estado === 'vigente' ? '#d1fae5' : '#fee2e2';
+      const enlaceHtml = ley.url && ley.url !== '#'
+        ? `<a href="${ley.url}" target="_blank" rel="noopener" class="modal-btn-gov">
+             🔗 Ver documento oficial <span style="font-size:11px;">(abre en nueva pestaña)</span>
+           </a>`
+        : `<span class="modal-btn-internal">📁 Documento de uso interno</span>`;
+
+      document.getElementById('modalContent').innerHTML = `
+        <div class="modal-header-band">
+          <span class="modal-proceso">📌 Proceso: ${ley.proceso}</span>
+        </div>
+        <h2 class="modal-title">${ley.titulo}</h2>
+        <div class="modal-meta">
+          <span class="modal-badge" style="background:${estadoBg};color:${estadoColor};">
+            ${ley.estado === 'vigente' ? '✅' : '⛔'} ${ley.estado.toUpperCase()}
+          </span>
+          <span class="modal-entidad">🏛 ${ley.entidad}</span>
+        </div>
+        <p class="modal-resumen">${ley.resumen}</p>
+        <div class="modal-footer-action">
+          ${enlaceHtml}
+        </div>
+      `;
+
+      document.getElementById('leyModal').classList.add('modal-open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModalBtn() {
+      document.getElementById('leyModal').classList.remove('modal-open');
+      document.body.style.overflow = '';
+    }
+
+    function closeModal(e) {
+      if (e.target.id === 'leyModal') closeModalBtn();
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeModalBtn();
+    });
+
+    renderTree();
+
+</script>
+<script type="module" src="../js/auth.js"></script>
+</body>
+</html>
