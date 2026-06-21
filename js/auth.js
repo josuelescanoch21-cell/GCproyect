@@ -175,17 +175,32 @@ function applyGlobalPermissions(){
   document.body.classList.toggle('is-admin', isAdmin());
   document.body.classList.toggle('can-manage', canManage());
 
-  document.querySelectorAll('a[href$="admin.html"], a[href*="/admin.html"]').forEach(a => {
-    a.style.display = isAdmin() ? '' : 'none';
+  // Menú por rol: el módulo de Seguridad y Roles y el Panel Admin
+  // son exclusivos para Administrador. No se muestran a Editor ni Lector.
+  document.querySelectorAll('a[href$="admin.html"], a[href*="/admin.html"], a[href$="fase3.html"], a[href*="/fase3.html"]').forEach(a => {
+    const card = a.closest('.phase-card');
+    if(card){
+      card.style.display = isAdmin() ? '' : 'none';
+    } else {
+      a.style.display = isAdmin() ? '' : 'none';
+    }
   });
 
   document.querySelectorAll('[data-admin-only]').forEach(el => el.classList.toggle('hidden', !isAdmin()));
   document.querySelectorAll('[data-manage-only]').forEach(el => el.classList.toggle('hidden', !canManage()));
 
-  if(location.pathname.endsWith('/admin.html') && !isAdmin()){
+  const isAdminOnlyPage = location.pathname.endsWith('/admin.html') || location.pathname.endsWith('/fase3.html');
+  if(isAdminOnlyPage && !isAdmin()){
     const main = document.querySelector('.main');
     if(main){
-      main.innerHTML = `<section class="auth-required-panel"><h2>Acceso restringido</h2><p>Este panel solo está disponible para cuentas con rol Administrador.</p><button id="restrictedLoginBtn">Iniciar sesión como administrador</button></section>`;
+      main.innerHTML = `<section class="auth-required-panel">
+        <h2>Acceso restringido</h2>
+        <p>Este módulo pertenece únicamente al rol Administrador. Los Editores y Lectores no tienen permisos para ver Seguridad y Roles.</p>
+        <div class="restricted-actions">
+          <a class="btn-back-home" href="${pagePrefix()}index.html">Volver al inicio</a>
+          <button id="restrictedLoginBtn">Iniciar sesión como administrador</button>
+        </div>
+      </section>`;
       document.getElementById('restrictedLoginBtn').onclick = openAuthModal;
     }
   }

@@ -423,3 +423,9 @@ table.data-table tr:hover td{
 
 /* Documentos de editor */
 .doc-columns{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.doc-columns section{background:rgba(255,255,255,.86);border:1px solid var(--border);border-radius:18px;padding:18px;box-shadow:var(--shadow-sm)}.doc-columns h2{font-size:16px;margin-bottom:14px}.doc-status-card{border:1px solid var(--border);border-left:6px solid var(--green);border-radius:14px;background:#fff;padding:14px;margin-bottom:12px;display:flex;justify-content:space-between;gap:12px}.doc-status-card.yellow{border-left-color:var(--yellow)}.doc-status-card.red{border-left-color:var(--red)}.doc-status-card h3{font-size:14px;margin:8px 0 4px}.doc-status-card p,.doc-date{font-size:12px;color:var(--muted)}.status-pill{font-size:11px;font-weight:800;border-radius:999px;padding:4px 9px;background:#e4f7ee;color:var(--green)}.status-pill.yellow{background:#fff4dc;color:var(--yellow)}.status-pill.red{background:#fdebea;color:var(--red)}@media(max-width:900px){.doc-columns{grid-template-columns:1fr}}
+
+/* Control visual de acceso por rol */
+.restricted-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:center;margin-top:18px}
+.btn-back-home,.restricted-actions button{border:0;border-radius:12px;padding:12px 16px;font-weight:800;text-decoration:none;cursor:pointer}
+.btn-back-home{background:#e5e7eb;color:#111827}
+.restricted-actions button{background:#0f172a;color:white}
