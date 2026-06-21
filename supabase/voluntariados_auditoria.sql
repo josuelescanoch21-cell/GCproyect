@@ -14,6 +14,7 @@ create table if not exists volunteer_opportunities (
   duration text,
   slots int default 0,
   description text,
+  image_url text,
   created_by_email text,
   created_at timestamptz not null default now()
 );
@@ -38,6 +39,26 @@ create table if not exists audit_logs (
   detail jsonb default '{}'::jsonb,
   created_at timestamptz not null default now()
 );
+
+
+
+alter table volunteer_opportunities
+add column if not exists image_url text;
+
+insert into storage.buckets (id, name, public)
+values ('voluntariados', 'voluntariados', true)
+on conflict (id) do update set public = true;
+
+drop policy if exists "Lectura publica imagenes voluntariados" on storage.objects;
+drop policy if exists "Demo subir imagenes voluntariados" on storage.objects;
+
+create policy "Lectura publica imagenes voluntariados"
+on storage.objects for select
+using (bucket_id = 'voluntariados');
+
+create policy "Demo subir imagenes voluntariados"
+on storage.objects for insert
+with check (bucket_id = 'voluntariados');
 
 alter table volunteer_opportunities enable row level security;
 alter table volunteer_registrations enable row level security;

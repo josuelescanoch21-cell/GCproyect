@@ -1,5 +1,6 @@
 
 import { getVolunteerOpportunities, createVolunteerOpportunity, enrollVolunteer, getVolunteerRegistrations } from './data.js';
+import { supabase, SUPABASE_READY } from './supabase-client.js';
 
 const list = document.getElementById('volunteerList');
 const empty = document.getElementById('volunteerEmpty');
@@ -13,6 +14,34 @@ function canCreate(){ const r = session()?.rol; return r === 'editor' || r === '
 function esc(v){ return String(v ?? '').replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
 function notify(msg, ok=true){ const n = document.getElementById('volunteerNotice'); n.innerHTML = `<div class="notice ${ok?'ok':'err'}">${msg}</div>`; setTimeout(()=>n.innerHTML='',4500); }
 
+
+function safeFileName(name){
+  return String(name || 'imagen')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9.\-_]/g, '-')
+    .replace(/-+/g, '-');
+}
+
+async function uploadOpportunityImage(file){
+  if(!file) return '';
+  if(!SUPABASE_READY) throw new Error('Supabase no está configurado. No se puede subir la imagen.');
+  if(!file.type.startsWith('image/')) throw new Error('Selecciona un archivo de imagen válido.');
+  if(file.size > 3 * 1024 * 1024) throw new Error('La imagen no debe superar los 3 MB.');
+
+  const path = `eventos/${Date.now()}-${safeFileName(file.name)}`;
+  const { error } = await supabase.storage
+    .from('voluntariados')
+    .upload(path, file, { cacheControl: '3600', upsert: false });
+
+  if(error) throw new Error('Error subiendo imagen: ' + error.message);
+
+  const { data } = supabase.storage
+    .from('voluntariados')
+    .getPublicUrl(path);
+
+  return data.publicUrl;
+}
+
 function renderCards(){
   const q = filters.q.toLowerCase();
   const rows = opportunities.filter(o =>
@@ -22,7 +51,9 @@ function renderCards(){
   );
   list.innerHTML = rows.map(o => `
     <article class="vol-card">
-      <div class="vol-image-slot"><span>${esc(o.ong_name || 'ONG')}</span><small>Espacio para imagen</small></div>
+      <div class="vol-image-slot">
+        ${o.image_url ? `<img src="${esc(o.image_url)}" alt="${esc(o.title || 'Voluntariado')}" class="vol-card-img">` : `<span>${esc(o.ong_name || 'ONG')}</span><small>Sin imagen</small>`}
+      </div>
       <div class="vol-body">
         <div class="vol-cause">${esc(o.causa || 'Voluntariado')}</div>
         <h3>${esc(o.title)}</h3>
@@ -63,6 +94,8 @@ async function init(){
   document.getElementById('createOpportunityForm').onsubmit = async e => {
     e.preventDefault();
     if(!canCreate()){ notify('Necesitas rol Representante ONG o Administrador para crear voluntariados.', false); return; }
+    const imageFile = document.getElementById('opImage')?.files?.[0] || null;
+
     const payload = {
       title: document.getElementById('opTitle').value.trim(),
       ong_name: document.getElementById('opOrg').value.trim(),
@@ -76,7 +109,14 @@ async function init(){
       description: document.getElementById('opDescription').value.trim()
     };
     if(!payload.title || !payload.ong_name || !payload.date_start){ notify('Completa título, organización y fecha.', false); return; }
-    try { const created = await createVolunteerOpportunity(payload); opportunities.unshift(created); renderCards(); e.target.reset(); notify('Voluntariado creado y registrado en auditoría.'); }
+    try {
+      payload.image_url = await uploadOpportunityImage(imageFile);
+      const created = await createVolunteerOpportunity(payload);
+      opportunities.unshift(created);
+      renderCards();
+      e.target.reset();
+      notify('Voluntariado creado con imagen y registrado en auditoría.');
+    }
     catch(err){ notify('' + err.message, false); }
   };
 }
