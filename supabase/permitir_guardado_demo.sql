@@ -1,5 +1,5 @@
 -- Permisos de demostración para que el frontend pueda guardar datos desde Railway.
--- Ejecutar en Supabase → SQL Editor.
+-- Ejecutar en Supabase → SQL Representante ONG.
 
 -- Evita recursión infinita en profiles causada por una policy que consulta profiles dentro de profiles.
 DROP POLICY IF EXISTS "Admin ve todos los perfiles" ON profiles;

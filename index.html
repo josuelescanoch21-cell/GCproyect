@@ -1,149 +1,62 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Portal GC — Dashboard · ONGs Perú</title>
-<link rel="stylesheet" href="css/dashboard.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GestionaONG — Plataforma de Gestión de ONG</title>
+  <link rel="stylesheet" href="css/dashboard.css" />
 </head>
 <body>
 <div class="dash-shell">
-
-  <!-- SIDEBAR -->
   <aside class="sidebar">
-    <div class="sidebar-brand">
-      <div class="logo">🌐</div>
-      <div>
-        <h1>Portal GC</h1>
-        <span>ONGs Perú</span>
-      </div>
-    </div>
-
+    <div class="sidebar-brand"><div class="logo">GO</div><div><h1>GestionaONG</h1><span>Gestión de ONG</span></div></div>
     <nav class="side-nav">
-      <span class="nav-label">General</span>
-      <a href="index.html" class="side-link active"><span class="ico">🏠</span> Inicio</a>
-      <a href="pages/fase1.html" class="side-link"><span class="ico">🗂️</span> Categorías</a>
-      <a href="pages/fase2.html" class="side-link"><span class="ico">🔍</span> Buscador</a>
-      <a href="pages/fase3.html" class="side-link"><span class="ico">🔐</span> Seguridad y Roles</a>
-      <a href="pages/admin.html" class="side-link"><span class="ico">🛠️</span> Panel Admin</a>
-
-      <span class="nav-label">Conocimiento</span>
-      <a href="pages/marco-legal.html" class="side-link"><span class="ico">📋</span> Marco Legal</a>
-      <a href="pages/constitucion.html" class="side-link"><span class="ico">🏢</span> Constitución ONG</a>
-      <a href="pages/voluntariados.html" class="side-link"><span class="ico">🤝</span> Voluntariados</a>
-      <a href="pages/documentos-ong.html" class="side-link" data-manage-only><span class="ico">📌</span> Mis documentos</a>
+      <span class="nav-label">Principal</span>
+      <a href="index.html" class="side-link active">Inicio</a>
+      <a href="pages/fase1.html" class="side-link">Guía de Trámites</a>
+      <a href="pages/fase2.html" class="side-link">Biblioteca Legal</a>
+      <a href="pages/fase3.html" class="side-link">Permisos del Sistema</a>
+      <a href="pages/admin.html" class="side-link">Administración</a>
+      <span class="nav-label">Servicios</span>
+      <a href="pages/marco-legal.html" class="side-link">Normativa Legal</a>
+      <a href="pages/constitucion.html" class="side-link">Crear ONG</a>
+      <a href="pages/voluntariados.html" class="side-link">Voluntariados</a>
+      <a href="pages/documentos-ong.html" class="side-link" data-manage-only>Mis Documentos</a>
     </nav>
-
-    <div class="sidebar-footer">
-      Portal GC · Gestión del Conocimiento
-    </div>
+    <div class="sidebar-footer">GestionaONG · Plataforma de gestión</div>
   </aside>
-
-  <!-- MAIN -->
   <main class="main">
     <div class="topbar">
-      <div>
-        <h2>Panel de Gestión del Conocimiento</h2>
-        <p class="sub">Vista general · documentos, búsquedas y vencimientos en tiempo real</p>
-      </div>
-      <div class="user-chip" data-manage-only>
-        <div class="avatar">✓</div>
-        <div>
-          <div style="font-size:13px;font-weight:600;">Sesión activa</div>
-          <div class="role">Usuario autenticado</div>
-        </div>
-      </div>
+      <div><h2>Panel de Gestión de ONG</h2><p class="sub">Administra documentos, voluntariados, postulaciones y requisitos legales desde un solo lugar.</p></div>
+      <div class="user-chip"><div class="avatar">GO</div><div><div style="font-size:13px;font-weight:600;">Sistema activo</div><div class="role">Conectado a Supabase</div></div></div>
     </div>
-
-    <!-- KPIs -->
-    <section class="kpi-grid" id="kpiGrid">
-      <div class="kpi-card dark">
-        <div class="label">Documentos totales <span>📄</span></div>
-        <div class="value" id="kpiDocs">—</div>
-        <div class="delta" style="color:#9fe3bb;">Base de conocimiento</div>
-      </div>
-      <div class="kpi-card">
-        <div class="label">Categorías activas <span>🗂️</span></div>
-        <div class="value" id="kpiCats">—</div>
-        <div class="delta">Organización del contenido</div>
-      </div>
-      <div class="kpi-card">
-        <div class="label">Vencimientos próximos <span>⏰</span></div>
-        <div class="value" id="kpiAlerts">—</div>
-        <div class="delta" style="color:var(--yellow);">Requieren atención</div>
-      </div>
-      <div class="kpi-card">
-        <div class="label">Latencia de búsqueda <span>⚡</span></div>
-        <div class="value">&lt;200ms</div>
-        <div class="delta">Resultados instantáneos</div>
-      </div>
+    <section class="image-slot hero-slot"><div><strong>Imagen principal de la plataforma</strong><span>Coloca aquí una imagen en <code>assets/img/hero-ong.jpg</code>.</span></div></section>
+    <section class="kpi-grid">
+      <div class="kpi-card dark"><div class="label">Documentos registrados</div><div class="value" id="kpiDocs">0</div><div class="delta">Permisos, constancias y normas</div></div>
+      <div class="kpi-card"><div class="label">Áreas de atención</div><div class="value" id="kpiCats">0</div><div class="delta">Legal, voluntariado y gestión</div></div>
+      <div class="kpi-card"><div class="label">Alertas de renovación</div><div class="value" id="kpiAlerts">0</div><div class="delta">Documentos próximos a vencer</div></div>
+      <div class="kpi-card"><div class="label">Voluntariados activos</div><div class="value">6</div><div class="delta">Oportunidades disponibles</div></div>
     </section>
-
-    <!-- SEARCH -->
     <section class="search-panel">
-      <h3>🔍 Buscador del Conocimiento</h3>
-      <p class="sub">Conectado a Supabase (Postgres) · registra automáticamente brechas de conocimiento</p>
-      <div class="search-box">
-        <span>🔍</span>
-        <input id="searchInput" type="text" placeholder="Buscar: Ley 28882, APCI, voluntariado, rendición de cuentas..." autocomplete="off" />
-        <button id="searchBtn">Buscar</button>
-      </div>
-      <div class="quick-tags">
-        <button data-q="Ley 28882">Ley 28882</button>
-        <button data-q="APCI">APCI</button>
-        <button data-q="voluntario">Manual voluntario</button>
-        <button data-q="datos">Protección de datos</button>
-        <button data-q="estatutos">Estatutos ONG</button>
-      </div>
+      <h3>Buscar información legal y trámites</h3>
+      <p class="sub">Encuentra requisitos para crear una ONG, renovar permisos o consultar normativa vigente.</p>
+      <div class="search-box"><input id="searchInput" type="text" placeholder="Buscar: APCI, estatutos, voluntariado, rendición de cuentas..." autocomplete="off" /><button id="searchBtn">Buscar</button></div>
+      <div class="quick-tags"><button data-q="APCI registro">APCI</button><button data-q="estatutos ONG">Estatutos</button><button data-q="rendición de cuentas">Rendición de cuentas</button><button data-q="voluntariado">Voluntariado</button></div>
       <div id="searchResults" class="search-results"></div>
     </section>
-
-
-    <section class="image-slot" id="image-slot-home">
-      <div>
-        <strong>Espacio para imagen institucional</strong>
-        <span>Cuando tengas tu imagen, colócala en <code>assets/img/dashboard-banner.jpg</code> y reemplaza este bloque.</span>
-      </div>
-    </section>
-
-    <!-- GRID: categories chart + alerts -->
     <section class="grid-2">
-      <div class="card">
-        <h3>📂 Documentos por categoría</h3>
-        <div id="categoryBars"></div>
-      </div>
-      <div class="card">
-        <h3>⚠️ Documentos por vencer</h3>
-        <div id="alertsList"></div>
-      </div>
+      <div class="card"><h3>Documentos por área</h3><div id="categoryBars"></div></div>
+      <div class="card"><h3>Próximas renovaciones</h3><div id="alertsList"></div></div>
     </section>
-
-    <!-- MÓDULOS DEL SISTEMA -->
     <section class="phase-grid">
-      <div class="phase-card">
-        <h4>Categorías</h4>
-        <span class="phase-badge badge-done">✔ Activo</span>
-        <br><a href="pages/fase1.html">Ver detalle →</a>
-      </div>
-      <div class="phase-card">
-        <h4>Buscador</h4>
-        <span class="phase-badge badge-done">✔ Activo</span>
-        <br><a href="pages/fase2.html">Ver detalle →</a>
-      </div>
-      <div class="phase-card">
-        <h4>Seguridad y Roles</h4>
-        <span class="phase-badge badge-done">✔ Activo</span>
-        <br><a href="pages/fase3.html">Ver detalle →</a>
-      </div>
-      <div class="phase-card">
-        <h4>Base de Datos</h4>
-        <span class="phase-badge badge-done">✔ Supabase</span>
-        <br><a href="supabase/schema.sql">Ver esquema →</a>
-      </div>
+      <article class="phase-card"><div class="num">Módulo</div><h4>Guía de Trámites</h4><span class="phase-badge badge-done">Disponible</span><br><a href="pages/fase1.html">Ver módulo</a></article>
+      <article class="phase-card"><div class="num">Módulo</div><h4>Biblioteca Legal</h4><span class="phase-badge badge-done">Disponible</span><br><a href="pages/fase2.html">Ver módulo</a></article>
+      <article class="phase-card"><div class="num">Módulo</div><h4>Crear ONG</h4><span class="phase-badge badge-done">Disponible</span><br><a href="pages/constitucion.html">Ver módulo</a></article>
+      <article class="phase-card"><div class="num">Módulo</div><h4>Voluntariados</h4><span class="phase-badge badge-done">Disponible</span><br><a href="pages/voluntariados.html">Ver módulo</a></article>
+      <article class="phase-card"><div class="num">Admin</div><h4>Permisos del Sistema</h4><span class="phase-badge badge-pending">Solo administrador</span><br><a href="pages/fase3.html">Ver módulo</a></article>
     </section>
   </main>
 </div>
-
 <script type="module" src="js/dashboard.js"></script>
 <script type="module" src="js/auth.js"></script>
 </body>

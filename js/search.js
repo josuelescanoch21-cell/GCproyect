@@ -3,18 +3,18 @@ const KNOWLEDGE_BASE = [
   {
     id: 1,
     title: "Ley N° 28882 — Ley de las Organizaciones No Gubernamentales",
-    category: "Marco Legal y Normativo",
+    category: "Normativa Legal y Normativo",
     tags: ["#ley", "#vigente", "#APCI"],
-    snippet: "Regula la constitución, registro obligatorio, funcionamiento y supervisión de las ONGs que reciben cooperación técnica internacional.",
+    snippet: "Regula la constitución, registro obligatorio, funcionamiento y supervisión de las ONG que reciben cooperación técnica internacional.",
     entidad: "APCI",
     fecha: "2024-03-01"
   },
   {
     id: 2,
     title: "Guía de Inscripción APCI — Paso a Paso",
-    category: "Marco Legal y Normativo",
+    category: "Normativa Legal y Normativo",
     tags: ["#manual", "#vigente", "#APCI"],
-    snippet: "Proceso completo de inscripción en la Agencia Peruana de Cooperación Internacional para ONGs que reciben fondos del exterior.",
+    snippet: "Proceso completo de inscripción en la Agencia Peruana de Cooperación Internacional para ONG que reciben fondos del exterior.",
     entidad: "APCI",
     fecha: "2024-06-15"
   },
@@ -30,7 +30,7 @@ const KNOWLEDGE_BASE = [
   {
     id: 4,
     title: "Ley N° 29733 — Protección de Datos Personales",
-    category: "Marco Legal y Normativo",
+    category: "Normativa Legal y Normativo",
     tags: ["#ley", "#vigente", "#MINJUSDH"],
     snippet: "Obligaciones de la ONG al gestionar datos de beneficiarios, voluntarios y donantes. Consentimiento y seguridad de datos.",
     entidad: "MINJUSDH",
@@ -66,9 +66,9 @@ const KNOWLEDGE_BASE = [
   {
     id: 8,
     title: "Ley N° 27806 — Transparencia y Acceso a la Información",
-    category: "Marco Legal y Normativo",
+    category: "Normativa Legal y Normativo",
     tags: ["#ley", "#vigente", "#PCM"],
-    snippet: "Aplica a ONGs que reciben fondos públicos; obliga a publicar información sobre uso de recursos.",
+    snippet: "Aplica a ONG que reciben fondos públicos; obliga a publicar información sobre uso de recursos.",
     entidad: "PCM / Defensoría",
     fecha: "2024-01-01"
   },
@@ -84,7 +84,7 @@ const KNOWLEDGE_BASE = [
   {
     id: 10,
     title: "Caso de Éxito: Programa de Inclusión Educativa Huancavelica 2024",
-    category: "Conocimiento Institucional",
+    category: "Información Institucional",
     tags: ["#caso-de-exito", "#infancia", "#comunidad-rural", "#educacion"],
     snippet: "Sistematización de la experiencia del programa que benefició a 1,200 niños en zonas rurales de Huancavelica durante 2024.",
     entidad: "Interno",
@@ -93,12 +93,12 @@ const KNOWLEDGE_BASE = [
 ];
 
 const SUGGESTIONS_MAP = {
-  "ley": ["Ley N° 28882 — ONGs", "Ley N° 29733 — Datos Personales", "Ley N° 27806 — Transparencia"],
+  "ley": ["Ley N° 28882 — ONG", "Ley N° 29733 — Datos Personales", "Ley N° 27806 — Transparencia"],
   "apci": ["Guía de Inscripción APCI", "Informe Anual APCI", "Registro ONG ante APCI"],
   "voluntar": ["Manual del Voluntario", "Protocolo de Inducción", "Evaluación de Voluntarios"],
   "estatuto": ["Modelo de Estatutos ONG", "Minuta y Escritura Pública", "Reforma de Estatutos"],
   "rendicion": ["Rendición de Cuentas USAID", "Formato Rendición APCI", "Auditoría Financiera"],
-  "sunat": ["Exoneración SUNAT — Art. 19 LIR", "RUC para ONGs", "Declaración Jurada Anual"],
+  "sunat": ["Exoneración SUNAT — Art. 19 LIR", "RUC para ONG", "Declaración Jurada Anual"],
   "sunarp": ["Inscripción SUNARP", "Personería Jurídica", "Registro de Estatutos"],
   "manual": ["Manual del Voluntario", "Manual del Directorio", "Manual de Procedimientos"],
   "proyecto": ["Marco Lógico", "Ciclo de Proyecto", "Informe Final de Proyecto"],
@@ -131,23 +131,23 @@ function doSearch() {
   if (results.length === 0) {
     resultsDiv.innerHTML = `
       <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:16px;color:#92400e;">
-        <strong>🔍 Sin resultados para "${query}"</strong>
-        <p style="font-size:13px;margin-top:4px;">Esta búsqueda se registra automáticamente para el análisis de brechas de conocimiento El administrador recibirá una alerta y creará el artículo correspondiente.</p>
+        <strong>Sin resultados para "${query}"</strong>
+        <p style="font-size:13px;margin-top:4px;">Esta búsqueda se registra automáticamente para el análisis de consultas pendientes El administrador recibirá una alerta y creará el documento correspondiente.</p>
       </div>`;
     return;
   }
 
   resultsDiv.innerHTML = `<p style="font-size:13px;color:#6b7280;margin-bottom:12px;">
-    <strong>${results.length}</strong> resultado(s) encontrado(s) para "<em>${query}</em>" — <span style="color:#0e9f6e">⚡ &lt;200ms</span>
+    <strong>${results.length}</strong> resultado(s) encontrado(s) para "<em>${query}</em>" — <span style="color:#0e9f6e">&lt;200ms</span>
   </p>` + results.map(item => `
     <div class="result-item">
-      <div class="result-title">📄 ${item.title}</div>
+      <div class="result-title">${item.title}</div>
       <div class="result-snippet">${item.snippet}</div>
       <div class="result-meta">
-        <span class="tag">📂 ${item.category}</span>
-        <span class="tag">🏛 ${item.entidad}</span>
+        <span class="tag">${item.category}</span>
+        <span class="tag">${item.entidad}</span>
         ${item.tags.map(t => `<span class="tag">${t}</span>`).join('')}
-        <span style="font-size:11px;color:#9ca3af;margin-left:auto;">📅 ${item.fecha}</span>
+        <span style="font-size:11px;color:#9ca3af;margin-left:auto;">${item.fecha}</span>
       </div>
     </div>
   `).join('');
@@ -182,7 +182,7 @@ function setupAutocomplete() {
     suggestionsDiv.classList.remove('hidden');
     suggestionsDiv.innerHTML = matches.slice(0, 6).map(m => `
       <div class="suggestion-item" onclick="setSearch('${m.replace(/'/g, "\\'")}')">
-        <span class="suggestion-icon">🔍</span> ${m}
+        <span class="suggestion-icon"></span> ${m}
       </div>
     `).join('');
   });

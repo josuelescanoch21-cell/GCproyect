@@ -2,20 +2,20 @@ import { supabase, SUPABASE_READY } from './supabase-client.js';
 
 // ---- Fallback local (se usa solo si Supabase no está configurado aún) ----
 const FALLBACK_DOCS = [
-  { id: 1, title: "Ley N° 28882 — Ley de las ONG", entidad: "APCI", snippet: "Regula la constitución, registro y supervisión de las ONGs.", tags: ["#ley","#vigente","#APCI"], status: "vigente", categories: { name: "Marco Legal y Normativo", icon: "📋" } },
-  { id: 2, title: "Guía de Inscripción APCI", entidad: "APCI", snippet: "Proceso completo de inscripción ante la APCI.", tags: ["#manual","#APCI"], status: "vigente", categories: { name: "Marco Legal y Normativo", icon: "📋" } },
-  { id: 3, title: "Manual del Voluntario", entidad: "RRHH Interno", snippet: "Guía de inducción para nuevos voluntarios.", tags: ["#manual","#interno"], status: "vigente", categories: { name: "RRHH y Voluntariado", icon: "👥" } },
-  { id: 4, title: "Ley N° 29733 — Protección de Datos", entidad: "MINJUSDH", snippet: "Obligaciones sobre datos de beneficiarios y donantes.", tags: ["#ley","#vigente"], status: "vigente", categories: { name: "Marco Legal y Normativo", icon: "📋" } },
-  { id: 5, title: "Informe Anual APCI 2025", entidad: "APCI", snippet: "Informe anual de actividades ante la APCI.", tags: ["#informe"], status: "en-revision", categories: { name: "Marco Legal y Normativo", icon: "📋" } },
+  { id: 1, title: "Ley N° 28882 — Ley de las ONG", entidad: "APCI", snippet: "Regula la constitución, registro y supervisión de las ONG.", tags: ["#ley","#vigente","#APCI"], status: "vigente", categories: { name: "Normativa Legal", icon: "DOC" } },
+  { id: 2, title: "Guía de Inscripción APCI", entidad: "APCI", snippet: "Proceso completo de inscripción ante la APCI.", tags: ["#manual","#APCI"], status: "vigente", categories: { name: "Normativa Legal", icon: "DOC" } },
+  { id: 3, title: "Manual del Voluntario", entidad: "RRHH Interno", snippet: "Guía de inducción para nuevos voluntarios.", tags: ["#manual","#interno"], status: "vigente", categories: { name: "RRHH y Voluntariado", icon: "VOL" } },
+  { id: 4, title: "Ley N° 29733 — Protección de Datos", entidad: "MINJUSDH", snippet: "Obligaciones sobre datos de beneficiarios y donantes.", tags: ["#ley","#vigente"], status: "vigente", categories: { name: "Normativa Legal", icon: "DOC" } },
+  { id: 5, title: "Informe Anual APCI 2025", entidad: "APCI", snippet: "Informe anual de actividades ante la APCI.", tags: ["#informe"], status: "en-revision", categories: { name: "Normativa Legal", icon: "DOC" } },
 ];
 
 const FALLBACK_CATEGORIES = [
-  { id: 1, name: "Marco Legal y Normativo", icon: "📋", slug: "marco-legal" },
-  { id: 2, name: "Constitución y Gobierno", icon: "🏢", slug: "constitucion" },
-  { id: 3, name: "Gestión de Proyectos y Fondos", icon: "💰", slug: "proyectos-fondos" },
-  { id: 4, name: "RRHH y Voluntariado", icon: "👥", slug: "rrhh-voluntariado" },
-  { id: 5, name: "Programas en Campo", icon: "🎯", slug: "programas-campo" },
-  { id: 6, name: "Conocimiento Institucional", icon: "📊", slug: "conocimiento-institucional" },
+  { id: 1, name: "Normativa Legal", icon: "DOC", slug: "marco-legal" },
+  { id: 2, name: "Constitución y Gobierno", icon: "ONG", slug: "constitucion" },
+  { id: 3, name: "Gestión de Proyectos y Fondos", icon: "FON", slug: "proyectos-fondos" },
+  { id: 4, name: "RRHH y Voluntariado", icon: "VOL", slug: "rrhh-voluntariado" },
+  { id: 5, name: "Programas en Campo", icon: "PRG", slug: "programas-campo" },
+  { id: 6, name: "Información Institucional", icon: "INF", slug: "información-institucional" },
 ];
 
 export async function getDocuments() {
@@ -45,7 +45,7 @@ export async function searchDocuments(query) {
     (d.entidad || '').toLowerCase().includes(q)
   );
 
-  // Registra la búsqueda para detectar contenido faltante
+  // Registra la búsqueda para detectar información solicitada
   if (SUPABASE_READY) {
     await supabase.from('search_logs').insert({ query, results_count: results.length });
   }
@@ -70,7 +70,7 @@ export async function getAlerts() {
 }
 
 // ---------------------------------------------------------------
-// PANEL ADMIN — escritura de datos (requiere sesión con rol editor/admin)
+// PANEL ADMIN — escritura de datos (requiere sesión con rol representante ONG/admin)
 // ---------------------------------------------------------------
 
 // Registra una ley nueva o una modificación de ley vigente.
@@ -144,13 +144,13 @@ export async function getCurrentRole() {
 // ---------------------------------------------------------------
 // VOLUNTARIADOS Y AUDITORÍA DE PROCESOS
 // ---------------------------------------------------------------
-const LOCAL_VOLUNTEERS_KEY = 'gc_volunteer_opportunities_v1';
-const LOCAL_REGISTRATIONS_KEY = 'gc_volunteer_registrations_v1';
-const LOCAL_AUDIT_KEY = 'gc_process_audit_v1';
+const LOCAL_VOLUNTEERS_KEY = 'ong_volunteer_opportunities_v1';
+const LOCAL_REGISTRATIONS_KEY = 'ong_volunteer_registrations_v1';
+const LOCAL_AUDIT_KEY = 'ong_process_audit_v1';
 
 const DEFAULT_OPPORTUNITIES = [
-  { id: 1, title: 'Mentoría para constitución de ONG', ong_name: 'Portal GC', modalidad: 'Virtual', causa: 'Educación', location: 'Lima', date_start: '2026-07-22', schedule: '16:00 a 18:00', duration: '2 horas', slots: 15, description: 'Acompañamiento para personas que desean formalizar una ONG y ordenar sus requisitos legales.', created_by_email: 'editor@ong.pe' },
-  { id: 2, title: 'Taller de documentación legal', ong_name: 'Portal GC', modalidad: 'Híbrido', causa: 'Gestión institucional', location: 'Lima', date_start: '2026-07-28', schedule: '19:00 a 21:00', duration: '2 horas', slots: 12, description: 'Revisión de documentos, permisos vigentes y alertas de renovación para organizaciones sociales.', created_by_email: 'editor@ong.pe' },
+  { id: 1, title: 'Mentoría para constitución de ONG', ong_name: 'GestionaONG', modalidad: 'Virtual', causa: 'Educación', location: 'Lima', date_start: '2026-07-22', schedule: '16:00 a 18:00', duration: '2 horas', slots: 15, description: 'Acompañamiento para personas que desean formalizar una ONG y ordenar sus requisitos legales.', created_by_email: 'editor@ong.pe' },
+  { id: 2, title: 'Taller de documentación legal', ong_name: 'GestionaONG', modalidad: 'Híbrido', causa: 'Gestión institucional', location: 'Lima', date_start: '2026-07-28', schedule: '19:00 a 21:00', duration: '2 horas', slots: 12, description: 'Revisión de documentos, permisos vigentes y alertas de renovación para organizaciones sociales.', created_by_email: 'editor@ong.pe' },
   { id: 3, title: 'Campaña de voluntariado comunitario', ong_name: 'ONG Aliada', modalidad: 'Presencial', causa: 'Comunidad', location: 'Lima', date_start: '2026-08-05', schedule: '09:00 a 13:00', duration: '4 horas', slots: 20, description: 'Apoyo en orientación ciudadana y difusión de requisitos para organizaciones sin fines de lucro.', created_by_email: 'editor@ong.pe' }
 ];
 
@@ -205,13 +205,13 @@ export async function createVolunteerOpportunity(payload) {
   const item = { ...payload, created_by_email: session?.email || null };
   if (SUPABASE_READY) {
     const { data, error } = await supabase.from('volunteer_opportunities').insert(item).select().single();
-    if (!error) { await logProcess('editor_crea_voluntariado', session?.rol, { opportunity_id: data.id, title: data.title }); return data; }
+    if (!error) { await logProcess('representante ONG_crea_voluntariado', session?.rol, { opportunity_id: data.id, title: data.title }); return data; }
     throw error;
   }
   const rows = await getVolunteerOpportunities();
   const created = { id: Date.now(), created_at: new Date().toISOString(), ...item };
   rows.unshift(created); setLocal(LOCAL_VOLUNTEERS_KEY, rows);
-  await logProcess('editor_crea_voluntariado', session?.rol, { opportunity_id: created.id, title: created.title });
+  await logProcess('representante ONG_crea_voluntariado', session?.rol, { opportunity_id: created.id, title: created.title });
   return created;
 }
 
@@ -221,14 +221,14 @@ export async function enrollVolunteer(opportunity) {
   const record = { opportunity_id: opportunity.id, opportunity_title: opportunity.title, user_email: session.email, user_name: session.nombre, role: session.rol, status: 'inscrito' };
   if (SUPABASE_READY) {
     const { data, error } = await supabase.from('volunteer_registrations').insert(record).select().single();
-    if (!error) { await logProcess('lector_se_inscribe_voluntariado', session.rol, { opportunity_id: opportunity.id, title: opportunity.title }); return data; }
+    if (!error) { await logProcess('voluntario_se_inscribe_voluntariado', session.rol, { opportunity_id: opportunity.id, title: opportunity.title }); return data; }
     throw error;
   }
   const regs = getLocal(LOCAL_REGISTRATIONS_KEY, []);
   if (regs.some(r => r.opportunity_id == opportunity.id && r.user_email === session.email)) throw new Error('Ya estás inscrito en este voluntariado.');
   const created = { id: Date.now(), created_at: new Date().toISOString(), ...record };
   regs.unshift(created); setLocal(LOCAL_REGISTRATIONS_KEY, regs);
-  await logProcess('lector_se_inscribe_voluntariado', session.rol, { opportunity_id: opportunity.id, title: opportunity.title });
+  await logProcess('voluntario_se_inscribe_voluntariado', session.rol, { opportunity_id: opportunity.id, title: opportunity.title });
   return created;
 }
 

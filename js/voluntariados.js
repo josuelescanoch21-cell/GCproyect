@@ -27,7 +27,7 @@ function renderCards(){
         <div class="vol-cause">${esc(o.causa || 'Voluntariado')}</div>
         <h3>${esc(o.title)}</h3>
         <p class="vol-org">${esc(o.ong_name || 'Organización')}</p>
-        <div class="vol-meta"><span>📅 ${esc(o.date_start || 'Por definir')}</span><span>⏰ ${esc(o.schedule || 'Horario flexible')}</span><span>📍 ${esc(o.location || 'Perú')}</span><span>💻 ${esc(o.modalidad || 'Virtual')}</span></div>
+        <div class="vol-meta"><span>${esc(o.date_start || 'Por definir')}</span><span>${esc(o.schedule || 'Horario flexible')}</span><span>${esc(o.location || 'Perú')}</span><span>${esc(o.modalidad || 'Virtual')}</span></div>
         <p class="vol-desc">${esc(o.description || '')}</p>
         <div class="vol-footer"><strong>Cupos disponibles: ${esc(o.slots || 0)}</strong><button data-enroll="${o.id}">Inscribirme</button></div>
       </div>
@@ -36,8 +36,8 @@ function renderCards(){
   document.querySelectorAll('[data-enroll]').forEach(btn => btn.onclick = async () => {
     const opp = opportunities.find(x => String(x.id) === String(btn.dataset.enroll));
     if(!session()){ window.GCAuth?.openAuthModal(); return; }
-    try { await enrollVolunteer(opp); notify('✅ Inscripción registrada. El proceso quedó auditado.'); await renderRegistrations(); }
-    catch(err){ notify('❌ ' + err.message, false); }
+    try { await enrollVolunteer(opp); notify('Inscripción registrada. El proceso quedó auditado.'); await renderRegistrations(); }
+    catch(err){ notify('' + err.message, false); }
   });
 }
 
@@ -62,7 +62,7 @@ async function init(){
 
   document.getElementById('createOpportunityForm').onsubmit = async e => {
     e.preventDefault();
-    if(!canCreate()){ notify('Necesitas rol Editor o Administrador para crear voluntariados.', false); return; }
+    if(!canCreate()){ notify('Necesitas rol Representante ONG o Administrador para crear voluntariados.', false); return; }
     const payload = {
       title: document.getElementById('opTitle').value.trim(),
       ong_name: document.getElementById('opOrg').value.trim(),
@@ -76,8 +76,8 @@ async function init(){
       description: document.getElementById('opDescription').value.trim()
     };
     if(!payload.title || !payload.ong_name || !payload.date_start){ notify('Completa título, organización y fecha.', false); return; }
-    try { const created = await createVolunteerOpportunity(payload); opportunities.unshift(created); renderCards(); e.target.reset(); notify('✅ Voluntariado creado y registrado en auditoría.'); }
-    catch(err){ notify('❌ ' + err.message, false); }
+    try { const created = await createVolunteerOpportunity(payload); opportunities.unshift(created); renderCards(); e.target.reset(); notify('Voluntariado creado y registrado en auditoría.'); }
+    catch(err){ notify('' + err.message, false); }
   };
 }
 

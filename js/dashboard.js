@@ -48,8 +48,8 @@ function renderResults(results, query) {
   if (!query) { el.innerHTML = ''; return; }
   if (!results.length) {
     el.innerHTML = `<div class="result-row"><div>
-      <div class="title">🔍 Sin resultados para "${query}"</div>
-      <div class="snippet">Esta búsqueda se registró automáticamente como brecha de conocimiento.</div>
+      <div class="title">Sin resultados para "${query}"</div>
+      <div class="snippet">Esta búsqueda se registró automáticamente como brecha de información.</div>
     </div></div>`;
     return;
   }

@@ -1,6 +1,6 @@
 
 -- Extensión funcional para voluntariados, auditoría y control documental.
--- Ejecutar en Supabase > SQL Editor si tu base ya estaba creada.
+-- Ejecutar en Supabase > SQL Representante ONG si tu base ya estaba creada.
 
 create table if not exists volunteer_opportunities (
   id bigint generated always as identity primary key,
@@ -24,7 +24,7 @@ create table if not exists volunteer_registrations (
   opportunity_title text,
   user_email text,
   user_name text,
-  role text default 'lector',
+  role text default 'voluntario',
   status text default 'inscrito',
   created_at timestamptz not null default now()
 );
@@ -58,7 +58,7 @@ create policy "Demo leer auditoria" on audit_logs for select using (true);
 create policy "Demo insertar auditoria" on audit_logs for insert with check (true);
 
 insert into volunteer_opportunities (title, ong_name, modalidad, causa, location, date_start, schedule, duration, slots, description, created_by_email) values
-('Mentoría para constitución de ONG', 'Portal GC', 'Virtual', 'Educación', 'Lima', current_date + 20, '16:00 a 18:00', '2 horas', 15, 'Acompañamiento para personas que desean formalizar una ONG y ordenar sus requisitos legales.', 'editor@ong.pe'),
-('Taller de documentación legal', 'Portal GC', 'Híbrido', 'Gestión institucional', 'Lima', current_date + 25, '19:00 a 21:00', '2 horas', 12, 'Revisión de documentos, permisos vigentes y alertas de renovación para organizaciones sociales.', 'editor@ong.pe'),
+('Mentoría para constitución de ONG', 'GestionaONG', 'Virtual', 'Educación', 'Lima', current_date + 20, '16:00 a 18:00', '2 horas', 15, 'Acompañamiento para personas que desean formalizar una ONG y ordenar sus requisitos legales.', 'editor@ong.pe'),
+('Taller de documentación legal', 'GestionaONG', 'Híbrido', 'Gestión institucional', 'Lima', current_date + 25, '19:00 a 21:00', '2 horas', 12, 'Revisión de documentos, permisos vigentes y alertas de renovación para organizaciones sociales.', 'editor@ong.pe'),
 ('Campaña de voluntariado comunitario', 'ONG Aliada', 'Presencial', 'Comunidad', 'Lima', current_date + 32, '09:00 a 13:00', '4 horas', 20, 'Apoyo en orientación ciudadana y difusión de requisitos para organizaciones sin fines de lucro.', 'editor@ong.pe')
 on conflict do nothing;

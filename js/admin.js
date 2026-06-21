@@ -74,7 +74,7 @@ document.getElementById('lawSaveBtn').addEventListener('click', async () => {
   if (!title || !snippet) { notice('lawNotice', 'Título y resumen son obligatorios.', false); return; }
   try {
     await createLaw({ title, snippet, entidad, linkExterno, tags });
-    notice('lawNotice', '✅ Ley publicada. Ya aparece en el buscador.');
+    notice('lawNotice', 'Ley publicada. Ya aparece en el buscador.');
     ['lawTitle','lawSnippet','lawEntidad','lawLink','lawTags'].forEach(id => document.getElementById(id).value = '');
   } catch (err) {
     notice('lawNotice', 'Error: ' + err.message, false);
@@ -92,7 +92,7 @@ document.getElementById('licSaveBtn').addEventListener('click', async () => {
   if (!title || !venceEl) { notice('licenseNotice', 'Nombre y fecha de vencimiento son obligatorios.', false); return; }
   try {
     await createLicense({ title, entidad, venceEl, snippet });
-    notice('licenseNotice', '✅ Vencimiento registrado. Aparecerá en el inicio.');
+    notice('licenseNotice', 'Vencimiento registrado. Aparecerá en el inicio.');
     ['licTitle','licEntidad','licFecha','licSnippet'].forEach(id => document.getElementById(id).value = '');
   } catch (err) {
     notice('licenseNotice', 'Error: ' + err.message, false);

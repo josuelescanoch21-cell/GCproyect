@@ -142,10 +142,10 @@ font-size: 13px;
 
 .cred-admin { background: #ede9fe; border-color: #c4b5fd; }
 .cred-admin:hover { border-color: #4f46e5; }
-.cred-editor { background: #d1fae5; border-color: #6ee7b7; }
-.cred-editor:hover { border-color: #0e9f6e; }
-.cred-lector { background: #f3f4f6; border-color: #d1d5db; }
-.cred-lector:hover { border-color: #6b7280; }
+.cred-representante ONG { background: #d1fae5; border-color: #6ee7b7; }
+.cred-representante ONG:hover { border-color: #0e9f6e; }
+.cred-voluntario { background: #f3f4f6; border-color: #d1d5db; }
+.cred-voluntario:hover { border-color: #6b7280; }
 
 /* ===== SESSION BAR ===== */
 .session-bar {
@@ -318,7 +318,7 @@ gap: 4px;
 .kpi-num  { font-size: 28px; font-weight: 800; color: #4f46e5; }
 .kpi-label { font-size: 12px; color: var(--text-muted); }
 
-/* ===== RBAC TABLE ===== */
+/* ===== permisos TABLE ===== */
 .rbac-table .p-yes { color: #059669; font-size: 16px; text-align: center; }
 .rbac-table .p-no  { color: #dc2626; font-size: 16px; text-align: center; }
 .rbac-table th:not(:first-child) { text-align: center; }
@@ -476,13 +476,13 @@ letter-spacing: 0.5px;
 .audit-detail { color: var(--text); }
 
 /* ===== EDITOR MARKDOWN ===== */
-.editor-grid {
+.representante ONG-grid {
 display: grid;
 grid-template-columns: 1fr 1fr;
 gap: 16px;
 }
 
-.editor-toolbar {
+.representante ONG-toolbar {
 display: flex;
 gap: 4px;
 background: var(--bg);
@@ -511,7 +511,7 @@ background: var(--border);
 margin: 2px 4px;
 }
 
-.editor-textarea {
+.representante ONG-textarea {
 width: 100%;
 min-height: 180px;
 padding: 14px;
@@ -524,7 +524,7 @@ line-height: 1.6;
 color: var(--text);
 }
 
-.editor-textarea:focus {
+.representante ONG-textarea:focus {
 outline: none;
 border-color: #4f46e5;
 }
@@ -554,14 +554,14 @@ color: var(--text);
 min-height: 60px;
 }
 
-.editor-actions {
+.representante ONG-actions {
 display: flex;
 gap: 10px;
 margin-top: 16px;
 justify-content: flex-end;
 }
 
-.editor-feedback {
+.representante ONG-feedback {
 margin-top: 12px;
 padding: 10px 16px;
 border-radius: 8px;
@@ -600,11 +600,11 @@ margin-bottom:8px;
 .dash-nav { display: flex; flex-wrap: wrap; }
 .dash-nav-item { border-bottom: none; border-right: 1px solid var(--border); flex: 1; min-width: 100px; text-align: center; }
 .audit-entry { grid-template-columns: 1fr 1fr; }
-.editor-grid { grid-template-columns: 1fr; }
+.representante ONG-grid { grid-template-columns: 1fr; }
 .session-time { display: none; }
 }
 /* =========================================================
-   PROFESSIONAL LOGIN + RBAC DASHBOARD POLISH
+   PROFESSIONAL LOGIN + permisos DASHBOARD POLISH
    ========================================================= */
 .login-screen{
   min-height:calc(100vh - 140px) !important;
@@ -617,7 +617,7 @@ margin-bottom:8px;
   position:relative;
 }
 .login-screen::before{
-  content:"Portal GC";
+  content:"GestionaONG";
   position:absolute;
   left:42px;
   top:38px;
@@ -642,7 +642,7 @@ margin-bottom:8px;
   background:#fff !important;
 }
 .login-card::before{
-  content:"Gestión documental segura\A para ONGs en Perú";
+  content:"Gestión documental segura\A para ONG en Perú";
   white-space:pre-line;
   display:flex;
   align-items:flex-end;
@@ -722,8 +722,8 @@ margin-bottom:8px;
   box-shadow:0 6px 18px rgba(11,31,51,.04);
 }
 .cred-admin:hover{border-color:var(--amber) !important;}
-.cred-editor:hover{border-color:var(--green) !important;}
-.cred-lector:hover{border-color:var(--navy-light) !important;}
+.cred-representante ONG:hover{border-color:var(--green) !important;}
+.cred-voluntario:hover{border-color:var(--navy-light) !important;}
 
 .session-bar{
   top:0 !important;
@@ -737,7 +737,7 @@ margin-bottom:8px;
   padding-left:0 !important;
   padding-right:0 !important;
 }
-.dash-nav,.editor-card,.article-card,.audit-card,.permission-card,.rbac-card{
+.dash-nav,.representante ONG-card,.article-card,.audit-card,.permission-card,.rbac-card{
   border-radius:20px !important;
   border:1px solid var(--border) !important;
   box-shadow:var(--shadow-sm) !important;
@@ -767,7 +767,7 @@ margin-bottom:8px;
 }
 
 /* Feedback de error al guardar en Supabase */
-.editor-feedback.fb-error {
+.representante ONG-feedback.fb-error {
   background: #fff1f2;
   color: #991b1b;
   border: 1px solid #fecdd3;

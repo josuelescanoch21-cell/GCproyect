@@ -1,5 +1,5 @@
 -- =========================================================
--- PORTAL GC — ONGs Perú · Esquema Supabase (PostgreSQL)
+-- PORTAL GC — Gestión de ONG · Esquema Supabase (PostgreSQL)
 -- Cubre: roles y permisos, categorías y documentos, historial de
 -- versiones, y registro de búsquedas para analítica.
 -- =========================================================
@@ -13,21 +13,21 @@ alter table if exists documents add column if not exists tipo text not null defa
 alter table if exists documents add column if not exists link_externo text;
 
 -- 1. ROLES Y PERMISOS ------------------------------------------------
-create type user_role as enum ('admin', 'editor', 'lector');
+create type user_role as enum ('admin', 'representante ONG', 'voluntario');
 
 create table if not exists profiles (
   id          uuid primary key references auth.users(id) on delete cascade,
   full_name   text,
-  role        user_role not null default 'lector',
+  role        user_role not null default 'voluntario',
   created_at  timestamptz not null default now()
 );
 
--- Crea automáticamente un perfil "lector" cuando alguien se registra
+-- Crea automáticamente un perfil "voluntario" cuando alguien se registra
 create or replace function public.handle_new_user()
 returns trigger language plpgsql security definer as $$
 begin
   insert into public.profiles (id, full_name, role)
-  values (new.id, new.raw_user_meta_data->>'full_name', 'lector');
+  values (new.id, new.raw_user_meta_data->>'full_name', 'voluntario');
   return new;
 end; $$;
 
@@ -104,7 +104,7 @@ create table if not exists search_logs (
   searched_at   timestamptz not null default now()
 );
 
--- Vista: "brechas de conocimiento" -> búsquedas sin resultados
+-- Vista: "consultas pendientes" -> búsquedas sin resultados
 create or replace view v_search_gaps as
   select query, count(*) as veces, max(searched_at) as ultima_busqueda
   from search_logs
@@ -139,14 +139,14 @@ create policy "Lectura pública de documentos" on documents
 create policy "Lectura pública de categorías" on categories
   for select using (true);
 
--- Solo editores y admin pueden crear/editar documentos
-create policy "Editores y admin escriben documentos" on documents
+-- Solo representante ONGes y admin pueden crear/editar documentos
+create policy "Representante ONGes y admin escriben documentos" on documents
   for insert with check (
-    exists (select 1 from profiles p where p.id = auth.uid() and p.role in ('editor','admin'))
+    exists (select 1 from profiles p where p.id = auth.uid() and p.role in ('representante ONG','admin'))
   );
-create policy "Editores y admin actualizan documentos" on documents
+create policy "Representante ONGes y admin actualizan documentos" on documents
   for update using (
-    exists (select 1 from profiles p where p.id = auth.uid() and p.role in ('editor','admin'))
+    exists (select 1 from profiles p where p.id = auth.uid() and p.role in ('representante ONG','admin'))
   );
 
 -- Solo admin puede borrar
@@ -167,22 +167,22 @@ create policy "Leer logs de búsqueda (autenticados)" on search_logs for select 
 
 -- 7. DATOS DE EJEMPLO (migra tu KNOWLEDGE_BASE actual de search.js) -
 insert into categories (name, slug, icon) values
-  ('Marco Legal y Normativo', 'marco-legal', '📋'),
-  ('Constitución y Gobierno', 'constitucion', '🏢'),
+  ('Normativa Legal', 'marco-legal', 'DOC'),
+  ('Constitución y Gobierno', 'constitucion', 'ONG'),
   ('Gestión de Proyectos y Fondos', 'proyectos-fondos', '💰'),
   ('Recursos Humanos y Voluntariado', 'rrhh-voluntariado', '👥'),
   ('Programas y Proyectos en Campo', 'programas-campo', '🎯'),
-  ('Conocimiento Institucional', 'conocimiento-institucional', '📊')
+  ('Información Institucional', 'información-institucional', '📊')
 on conflict (slug) do nothing;
 
 insert into documents (title, category_id, entidad, snippet, tags, status, vence_el) values
   ('Ley N° 28882 — Ley de las Organizaciones No Gubernamentales',
     (select id from categories where slug='marco-legal'), 'APCI',
-    'Regula la constitución, registro obligatorio, funcionamiento y supervisión de las ONGs.',
+    'Regula la constitución, registro obligatorio, funcionamiento y supervisión de las ONG.',
     array['#ley','#vigente','#APCI'], 'vigente', null),
   ('Guía de Inscripción APCI — Paso a Paso',
     (select id from categories where slug='marco-legal'), 'APCI',
-    'Proceso completo de inscripción en la APCI para ONGs que reciben fondos del exterior.',
+    'Proceso completo de inscripción en la APCI para ONG que reciben fondos del exterior.',
     array['#manual','#vigente','#APCI'], 'vigente', null),
   ('Manual del Voluntario — Inducción y Protocolo',
     (select id from categories where slug='rrhh-voluntariado'), 'RRHH Interno',
